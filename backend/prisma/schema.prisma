@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CANDIDATE
+  RECRUITER
+  ADMIN
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  INTERVIEW_SCHEDULED
+  TECHNICAL_PHASE
+  FINAL_ROUND
+  OFFERED
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+enum PaymentStatus {
+  PENDING
+  AUTHORIZED
+  CAPTURED
+  REFUNDED
+  FAILED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String?   // Null for OAuth users
+  name          String?
+  role          Role      @default(CANDIDATE)
+  onboarded     Boolean   @default(false)
+  
+  // Auth stuff
+  refreshToken  String?   @unique
+  lastLogin     DateTime? @default(now())
+  
+  // Profile
+  profile       Profile?
+  
+  // Relations
+  applications  Application[]
+  payments      Payment[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Profile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  phone           String?
+  resumeUrl       String?
+  linkedinUrl     String?
+  githubUrl       String?
+  portfolioUrl    String?
+  bio             String?  @db.Text
+  location        String?
+  currentRole     String?
+  experienceYears Int?
+  skills          String[] @default([])
+  
+  certifications  Certification[]
+  education       Education[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Certification {
+  id        String   @id @default(cuid())
+  profileId String
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  name      String
+  issuer    String
+  date      DateTime
+  url       String?
+}
+
+model Education {
+  id         String   @id @default(cuid())
+  profileId  String
+  profile    Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  institution String
+  degree      String
+  field       String
+  startDate   DateTime
+  endDate     DateTime?
+}
+
+model Application {
+  id          String            @id @default(cuid())
+  candidateId String
+  candidate   User              @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  
+  trackId     String            // Reference to a track (Sales, etc.)
+  status      ApplicationStatus @default(DRAFT)
+  currentStep Int               @default(1)
+  
+  data        Json?             // Form state for multi-step onboarding
+  
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  orderId       String        @unique // Razorpay Order ID
+  transactionId String?       @unique // Razorpay Payment ID
+  amount        Int           // Amount in paise
+  currency      String        @default("INR")
+  status        PaymentStatus @default(PENDING)
+  
+  description   String?
+  receipt       String?
+  
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  type      String   // E.g., PAYMENT, ONBOARDING, SYSTEM
+  
+  createdAt DateTime @default(now())
+}
