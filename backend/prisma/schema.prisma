@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_DATABASE_URL")
 }
 
@@ -42,26 +42,37 @@ model User {
   name          String?
   role          Role      @default(CANDIDATE)
   onboarded     Boolean   @default(false)
-  
-  // Auth stuff
+
+  emailVerified     Boolean   @default(false)
+  verifyCode        String?
+  verifyCodeExpiry  DateTime?
+  resetToken        String?   @unique
+  resetTokenExpiry  DateTime?
+
+  // Auth
   refreshToken  String?   @unique
   lastLogin     DateTime? @default(now())
-  
+
+  // Resume
+  resumeUrl     String?
+
   // Profile
   profile       Profile?
-  
+
   // Relations
   applications  Application[]
   payments      Payment[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 model Profile {
   id              String   @id @default(cuid())
+
   userId          String   @unique
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+
   phone           String?
   resumeUrl       String?
   linkedinUrl     String?
@@ -70,20 +81,24 @@ model Profile {
   bio             String?  @db.Text
   location        String?
   currentRole     String?
+  avatarUrl       String? 
   experienceYears Int?
+
   skills          String[] @default([])
-  
+
   certifications  Certification[]
   education       Education[]
-  
+
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
 
 model Certification {
   id        String   @id @default(cuid())
+
   profileId String
   profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
   name      String
   issuer    String
   date      DateTime
@@ -91,56 +106,71 @@ model Certification {
 }
 
 model Education {
-  id         String   @id @default(cuid())
-  profileId  String
-  profile    Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  id          String   @id @default(cuid())
+
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
   institution String
   degree      String
   field       String
+
   startDate   DateTime
   endDate     DateTime?
 }
 
 model Application {
   id          String            @id @default(cuid())
+
   candidateId String
   candidate   User              @relation(fields: [candidateId], references: [id], onDelete: Cascade)
-  
-  trackId     String            // Reference to a track (Sales, etc.)
+
+  trackId     String
   status      ApplicationStatus @default(DRAFT)
+
   currentStep Int               @default(1)
-  
-  data        Json?             // Form state for multi-step onboarding
-  
+
+  // Multi-step onboarding state
+  data        Json?
+
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
 }
 
 model Payment {
   id            String        @id @default(cuid())
+
   userId        String
   user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  orderId       String        @unique // Razorpay Order ID
-  transactionId String?       @unique // Razorpay Payment ID
-  amount        Int           // Amount in paise
+
+  // Razorpay
+  orderId       String        @unique
+  transactionId String?       @unique
+
+  amount        Int
   currency      String        @default("INR")
+
   status        PaymentStatus @default(PENDING)
-  
+
   description   String?
   receipt       String?
-  
+
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 }
 
 model Notification {
   id        String   @id @default(cuid())
+
   userId    String
+
   title     String
   message   String
+
   read      Boolean  @default(false)
-  type      String   // E.g., PAYMENT, ONBOARDING, SYSTEM
-  
+
+  // PAYMENT, ONBOARDING, SYSTEM
+  type      String
+
   createdAt DateTime @default(now())
 }

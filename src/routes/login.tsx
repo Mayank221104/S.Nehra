@@ -1,14 +1,16 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { AuthShell, AuthField } from "@/components/auth/auth-shell";
+import { useSession } from "@/lib/session";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Sign in – Atelier Careers" }] }),
+  head: () => ({ meta: [{ title: "Sign in — S.Nehra" }] }),
   component: Login,
 });
 
 function Login() {
   const navigate = useNavigate();
+  const { refetch } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -27,6 +29,7 @@ function Login() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
+      await refetch();
       navigate({ to: "/dashboard" });
     } catch (err: any) {
       setError(err.message || "Something went wrong");
@@ -42,8 +45,8 @@ function Login() {
       footer={
         <>
           New here?{" "}
-          <Link to="/signup" className="font-medium text-ink hover:text-gold">
-            Create an account
+          <Link to="/apply" className="font-medium text-ink hover:text-gold">
+            Begin application
           </Link>
         </>
       }

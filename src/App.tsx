@@ -1,6 +1,6 @@
-import { Outlet } from '@tanstack/react-router';
-import { ErrorBoundary } from './components/ErrorBoundary';
-import { SessionProvider } from './lib/session';
+import { Outlet } from "@tanstack/react-router";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import { SessionProvider } from "./lib/session";
 
 // TODO: Replace with actual SSR session fetch logic
 const initialSession = null;

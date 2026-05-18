@@ -1,8 +1,21 @@
-import { Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { Link, Outlet, useRouterState, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { useSession } from "@/lib/session";
 import {
-  LayoutGrid, GraduationCap, MessagesSquare, Briefcase, FileText,
-  Award, User, Settings, Bell, Search, Menu, X, ChevronRight, LogOut,
+  LayoutGrid,
+  GraduationCap,
+  MessagesSquare,
+  Briefcase,
+  FileText,
+  Award,
+  User,
+  Settings,
+  Bell,
+  Search,
+  Menu,
+  X,
+  ChevronRight,
+  LogOut,
 } from "lucide-react";
 
 const nav = [
@@ -18,7 +31,22 @@ const nav = [
 
 export function DashboardLayout() {
   const [open, setOpen] = useState(false);
+  const { user } = useSession();
+  const navigate = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
+
+  const initials =
+    user?.name
+      ?.split(" ")
+      .map((w) => w[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() ?? "?";
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    navigate({ to: "/login" });
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -40,7 +68,9 @@ export function DashboardLayout() {
                   active ? "bg-ink text-primary-foreground" : "text-foreground hover:bg-muted"
                 }`}
               >
-                <n.icon className={`h-4 w-4 ${active ? "text-gold" : "text-muted-foreground group-hover:text-ink"}`} />
+                <n.icon
+                  className={`h-4 w-4 ${active ? "text-gold" : "text-muted-foreground group-hover:text-ink"}`}
+                />
                 {n.label}
               </Link>
             );
@@ -48,14 +78,20 @@ export function DashboardLayout() {
         </nav>
         <div className="border-t border-[oklch(0_0_0/0.06)] p-4">
           <div className="flex items-center gap-3 rounded-[12px] p-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink font-display text-sm text-primary-foreground">JD</div>
-            <div className="min-w-0 flex-1">
-              <div className="truncate text-sm font-medium text-ink">Jane Doe</div>
-              <div className="truncate text-xs text-muted-foreground">Cohort 14 · Sales</div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink font-display text-sm text-primary-foreground">
+              {initials}
             </div>
-            <Link to="/login" aria-label="Sign out" className="text-muted-foreground hover:text-ink">
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-sm font-medium text-ink">{user?.name ?? "User"}</div>
+              <div className="truncate text-xs text-muted-foreground">Cohort 14</div>
+            </div>
+            <button
+              onClick={handleLogout}
+              aria-label="Sign out"
+              className="text-muted-foreground hover:text-ink"
+            >
               <LogOut className="h-4 w-4" />
-            </Link>
+            </button>
           </div>
         </div>
       </aside>
@@ -63,11 +99,18 @@ export function DashboardLayout() {
       {/* Mobile drawer */}
       {open && (
         <>
-          <div className="fixed inset-0 z-40 bg-ink/50 backdrop-blur-sm lg:hidden" onClick={() => setOpen(false)} />
+          <div
+            className="fixed inset-0 z-40 bg-ink/50 backdrop-blur-sm lg:hidden"
+            onClick={() => setOpen(false)}
+          />
           <aside className="fixed inset-y-0 left-0 z-50 w-72 bg-sidebar p-4 shadow-elevated lg:hidden">
             <div className="mb-4 flex items-center justify-between px-2">
-              <span className="font-display text-lg font-semibold">Atelier<span className="text-gold">·</span>Careers</span>
-              <button onClick={() => setOpen(false)}><X className="h-5 w-5" /></button>
+              <span className="font-display text-lg font-semibold">
+                Atelier<span className="text-gold">·</span>Careers
+              </span>
+              <button onClick={() => setOpen(false)}>
+                <X className="h-5 w-5" />
+              </button>
             </div>
             <nav className="space-y-1">
               {nav.map((n) => {
@@ -86,6 +129,14 @@ export function DashboardLayout() {
                 );
               })}
             </nav>
+            <div className="mt-4 border-t border-[oklch(0_0_0/0.06)] pt-4">
+              <button
+                onClick={handleLogout}
+                className="flex w-full items-center gap-3 rounded-[12px] px-3 py-2.5 text-sm text-foreground hover:bg-muted"
+              >
+                <LogOut className="h-4 w-4 text-muted-foreground" /> Sign out
+              </button>
+            </div>
           </aside>
         </>
       )}
@@ -93,7 +144,11 @@ export function DashboardLayout() {
       {/* Main */}
       <div className="lg:pl-64">
         <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-[oklch(0_0_0/0.06)] bg-background/80 px-4 py-3 backdrop-blur-xl lg:px-8">
-          <button className="rounded-md p-2 lg:hidden" onClick={() => setOpen(true)} aria-label="Open menu">
+          <button
+            className="rounded-md p-2 lg:hidden"
+            onClick={() => setOpen(true)}
+            aria-label="Open menu"
+          >
             <Menu className="h-5 w-5" />
           </button>
           <div className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex">
@@ -109,11 +164,16 @@ export function DashboardLayout() {
                 className="w-64 rounded-[12px] border border-border bg-surface py-2 pl-9 pr-3 text-sm placeholder:text-muted-foreground/60 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20"
               />
             </div>
-            <button aria-label="Notifications" className="relative rounded-[12px] border border-border bg-surface p-2.5 transition-colors hover:bg-muted">
+            <button
+              aria-label="Notifications"
+              className="relative rounded-[12px] border border-border bg-surface p-2.5 transition-colors hover:bg-muted"
+            >
               <Bell className="h-4 w-4" />
               <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-gold" />
             </button>
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink font-display text-sm text-primary-foreground">JD</div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink font-display text-sm text-primary-foreground">
+              {initials}
+            </div>
           </div>
         </header>
         <main className="px-4 py-8 lg:px-10 lg:py-12">
