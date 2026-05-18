@@ -33,7 +33,7 @@ const faqs = [
 export function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
   return (
-    <section className="border-b border-[oklch(0_0_0/0.06)] py-20 lg:py-20">
+    <section className="border-b border-[oklch(0_0_0/0.06)] py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         <div className="grid gap-16 lg:grid-cols-[1fr_2fr] lg:gap-24">
           <Reveal>
