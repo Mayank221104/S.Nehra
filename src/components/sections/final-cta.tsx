@@ -4,7 +4,7 @@ import { Reveal } from "../reveal";
 
 export function FinalCTA() {
   return (
-    <section className="grain relative overflow-hidden bg-ink py-32 text-primary-foreground lg:py-40">
+    <section className="grain relative overflow-hidden bg-ink py-24 text-primary-foreground lg:py-28">
       <div className="mx-auto max-w-5xl px-6 text-center lg:px-12">
         <Reveal>
           <div className="eyebrow text-primary-foreground/60">09 — Next Cohort</div>
@@ -32,8 +32,14 @@ export function FinalCTA() {
           </div>
         </Reveal>
       </div>
-      <div className="pointer-events-none absolute -left-40 -top-40 h-[500px] w-[500px] rounded-full bg-gold/10 blur-3xl" aria-hidden />
-      <div className="pointer-events-none absolute -bottom-40 -right-40 h-[500px] w-[500px] rounded-full bg-gold/10 blur-3xl" aria-hidden />
+      <div
+        className="pointer-events-none absolute -left-40 -top-40 h-[500px] w-[500px] rounded-full bg-gold/10 blur-3xl"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute -bottom-40 -right-40 h-[500px] w-[500px] rounded-full bg-gold/10 blur-3xl"
+        aria-hidden
+      />
     </section>
   );
 }

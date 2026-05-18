@@ -1,44 +1,81 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { AuthShell, AuthField } from "@/components/auth/auth-shell";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Sign in — Atelier Careers" }] }),
+  head: () => ({ meta: [{ title: "Sign in – Atelier Careers" }] }),
   component: Login,
 });
 
 function Login() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+      navigate({ to: "/dashboard" });
+    } catch (err: any) {
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <AuthShell
       title="Welcome back."
       subtitle="Sign in to your dashboard, track placements, and pick up where you left off."
-      footer={<>New here? <Link to="/signup" className="font-medium text-ink hover:text-gold">Create an account</Link></>}
+      footer={
+        <>
+          New here?{" "}
+          <Link to="/signup" className="font-medium text-ink hover:text-gold">
+            Create an account
+          </Link>
+        </>
+      }
     >
-      <form className="space-y-5">
-        <AuthField label="Email" type="email" placeholder="you@example.com" />
+      <form className="space-y-5" onSubmit={handleSubmit}>
+        <AuthField
+          label="Email"
+          type="email"
+          placeholder="you@example.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
         <AuthField
           label="Password"
           type="password"
           placeholder="••••••••"
-          rightSlot={<Link to="/forgot-password" className="text-xs text-muted-foreground hover:text-gold">Forgot?</Link>}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          rightSlot={
+            <Link to="/forgot-password" className="text-xs text-muted-foreground hover:text-gold">
+              Forgot?
+            </Link>
+          }
         />
-        <label className="flex items-center gap-2 text-sm text-muted-foreground">
-          <input type="checkbox" className="h-4 w-4 rounded border-border accent-[oklch(0.14_0_0)]" />
-          Remember me on this device
-        </label>
-        <Link
-          to="/dashboard"
-          className="block w-full rounded-[14px] bg-ink px-6 py-3.5 text-center text-sm font-medium text-primary-foreground transition-all hover:bg-ink/90 hover:shadow-gold"
+        {error && <p className="text-sm text-destructive">{error}</p>}
+        <button
+          type="submit"
+          disabled={loading}
+          className="block w-full rounded-[14px] bg-ink px-6 py-3.5 text-center text-sm font-medium text-primary-foreground transition-all hover:bg-ink/90 hover:shadow-gold disabled:opacity-50"
         >
-          Sign in
-        </Link>
-        <div className="relative my-6 text-center">
-          <div className="absolute inset-0 top-1/2 h-px bg-border" />
-          <span className="relative bg-background px-3 text-xs uppercase tracking-[0.18em] text-muted-foreground">or</span>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <button type="button" className="rounded-[14px] border border-border bg-surface px-4 py-3 text-sm transition-colors hover:bg-muted">Google</button>
-          <button type="button" className="rounded-[14px] border border-border bg-surface px-4 py-3 text-sm transition-colors hover:bg-muted">LinkedIn</button>
-        </div>
+          {loading ? "Signing in..." : "Sign in"}
+        </button>
       </form>
     </AuthShell>
   );

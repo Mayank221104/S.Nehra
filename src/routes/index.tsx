@@ -15,10 +15,18 @@ import { FinalCTA } from "@/components/sections/final-cta";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Atelier Careers — Stop Applying. Start Getting Hired." },
-      { name: "description", content: "A 12-week premium placement consultancy. We train, certify, and place talent into careers worth keeping. Sales Excellence & Customer Support tracks." },
-      { property: "og:title", content: "Atelier Careers — Stop Applying. Start Getting Hired." },
-      { property: "og:description", content: "Premium placement consultancy with a written job guarantee. 94% placement rate. 180+ hiring partners." },
+      { title: "S.Nehra — Stop Applying. Start Getting Hired." },
+      {
+        name: "description",
+        content:
+          "A 12-week premium placement consultancy. We train, certify, and place talent into careers worth keeping. Sales Excellence & Customer Support tracks.",
+      },
+      { property: "og:title", content: "S.Nehra — Stop Applying. Start Getting Hired." },
+      {
+        property: "og:description",
+        content:
+          "Premium placement consultancy with a written job guarantee. 94% placement rate. 180+ hiring partners.",
+      },
     ],
   }),
   component: Index,

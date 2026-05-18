@@ -15,7 +15,7 @@ const includes = [
 
 export function Pricing() {
   return (
-    <section className="border-b border-[oklch(0_0_0/0.06)] py-24 lg:py-32">
+    <section className="border-b border-[oklch(0_0_0/0.06)] py-20 lg:py-20">
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         <Reveal className="mx-auto max-w-2xl text-center">
           <div className="eyebrow">07 — Pricing</div>
@@ -31,23 +31,31 @@ export function Pricing() {
           <div className="overflow-hidden rounded-[28px] border border-[oklch(0_0_0/0.08)] bg-surface shadow-elevated">
             <div className="grid lg:grid-cols-[1.2fr_1fr]">
               <div className="border-b border-[oklch(0_0_0/0.08)] p-10 lg:border-b-0 lg:border-r">
-                <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Full Program</div>
-                <h3 className="mt-3 font-display text-4xl text-ink">Atelier Cohort</h3>
-                <div className="mt-8 flex items-baseline gap-3">
-                  <span className="font-display text-6xl text-ink">₹89,000</span>
-                  <span className="text-sm text-muted-foreground line-through">₹1,20,000</span>
+                <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                  Full Program
                 </div>
-                <p className="mt-3 text-xs uppercase tracking-[0.18em] text-gold">Or ₹0 upfront · ISA after placement</p>
+                <h3 className="mt-3 font-display text-4xl text-ink">S.Nehra Cohort</h3>
+                <div className="mt-8 flex items-baseline gap-3">
+                  <span className="font-display text-6xl text-ink">₹9,999</span>
+                  <span className="text-sm text-muted-foreground line-through">₹20,000</span>
+                </div>
+                <p className="mt-3 text-xs uppercase tracking-[0.18em] text-gold">
+                  Or ₹0 upfront · ISA after placement
+                </p>
                 <Link
                   to="/apply"
                   className="mt-10 inline-flex w-full items-center justify-center rounded-[14px] bg-ink px-6 py-4 text-sm font-medium text-primary-foreground transition-all hover:bg-ink/90 hover:shadow-gold"
                 >
                   Apply for the next cohort
                 </Link>
-                <p className="mt-4 text-xs text-muted-foreground">Refundable application fee · Limited seats per cohort</p>
+                <p className="mt-4 text-xs text-muted-foreground">
+                  Refundable application fee · Limited seats per cohort
+                </p>
               </div>
               <div className="p-10">
-                <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">What's included</div>
+                <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                  What's included
+                </div>
                 <ul className="mt-5 space-y-3">
                   {includes.map((i) => (
                     <li key={i} className="flex items-start gap-3 text-sm text-foreground">

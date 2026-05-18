@@ -1,7 +1,14 @@
-import { PrismaClient } from '@prisma/client';
+import "dotenv/config";
+import { PrismaClient } from "@prisma/client";
 
 const prismaClientSingleton = () => {
-  return new PrismaClient();
+  return new PrismaClient({
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
+  });
 };
 
 declare global {
@@ -9,7 +16,6 @@ declare global {
 }
 
 const prisma = globalThis.prisma ?? prismaClientSingleton();
-
 export default prisma;
 
-if (process.env.NODE_ENV !== 'production') globalThis.prisma = prisma;
+if (process.env.NODE_ENV !== "production") globalThis.prisma = prisma;
