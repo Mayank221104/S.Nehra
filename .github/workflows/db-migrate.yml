@@ -1,0 +1,38 @@
+name: DB Migrate
+
+# Manual trigger only — run this when you push schema changes
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type 'migrate' to confirm production migration"
+        required: true
+
+jobs:
+  migrate:
+    name: Run Prisma Migrations
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'migrate'
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Run migrations
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_DATABASE_URL: ${{ secrets.DIRECT_DATABASE_URL }}

@@ -11,6 +11,7 @@ import {
   resetPassword,
 } from "../controllers/auth.controller";
 import { authenticate } from "../middleware/auth.middleware";
+import { changePassword, deleteAccount } from "../controllers/auth.controller";
 
 const router = Router();
 
@@ -23,5 +24,7 @@ router.post("/refresh", refresh);
 router.get("/me", authenticate, me);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
+router.post("/change-password", authenticate, changePassword);
+router.delete("/delete-account", authenticate, deleteAccount);
 
 export default router;
