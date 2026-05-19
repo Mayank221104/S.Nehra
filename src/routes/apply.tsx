@@ -122,8 +122,16 @@ function Apply() {
           credentials: "include",
           body: formDataUpload,
         });
-        const resumeData = await resumeRes.json();
+        let resumeData;
+        try {
+          resumeData = await resumeRes.json();
+        } catch (e) {
+          throw new Error("Resume upload failed: Invalid server response");
+        }
         console.log("Resume:", resumeRes.status, resumeData);
+        if (!resumeRes.ok) {
+          throw new Error(resumeData?.message || "Resume upload failed");
+        }
       }
 
       // 4. Application create
