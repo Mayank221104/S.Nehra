@@ -67,6 +67,14 @@ model User {
   updatedAt     DateTime  @updatedAt
 }
 
+model Visitor {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  source    String?  @default("popup")
+  createdAt DateTime @default(now())
+}
+
 model Profile {
   id              String   @id @default(cuid())
 

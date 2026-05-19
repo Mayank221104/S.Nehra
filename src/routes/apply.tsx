@@ -1,10 +1,19 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Check, Upload, BarChart3, Headphones } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Upload,
+  BarChart3,
+  Headphones,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 
 export const Route = createFileRoute("/apply")({
-  head: () => ({ meta: [{ title: "Apply — Atelier Careers" }] }),
+  head: () => ({ meta: [{ title: "Apply — S.Nehra" }] }),
   component: Apply,
 });
 
@@ -23,6 +32,11 @@ function Apply() {
   const [exp, setExp] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [resumeUploaded, setResumeUploaded] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -42,7 +56,28 @@ function Apply() {
 
   const last = steps.length - 1;
 
-  // Step 5 (Resume) ke baad — signup + application create
+  const validateStep = (currentStep: number): boolean => {
+    const errors: Record<string, string> = {};
+    if (currentStep === 0) {
+      if (!formData.fullName.trim()) errors.fullName = "Full name required";
+      if (!formData.email.trim()) errors.email = "Email required";
+      else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = "Valid email required";
+      if (!formData.phone.trim()) errors.phone = "Phone required";
+      if (!formData.city.trim()) errors.city = "City required";
+      if (!formData.password) errors.password = "Password required";
+      else if (formData.password.length < 8) errors.password = "Min 8 characters";
+      if (formData.password !== confirmPassword) errors.confirmPassword = "Passwords don't match";
+    }
+    if (currentStep === 1 && !track) errors.track = "Please select a track";
+    if (currentStep === 2) {
+      if (!formData.degree.trim()) errors.degree = "Degree required";
+      if (!formData.college.trim()) errors.college = "College required";
+    }
+    if (currentStep === 3 && !exp) errors.exp = "Please select experience level";
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleApplicationSubmit = async () => {
     setLoading(true);
     setError("");
@@ -59,11 +94,13 @@ function Apply() {
         }),
       });
       const signupData = await signupRes.json();
+      console.log("Signup:", signupRes.status, signupData);
+
       if (!signupRes.ok && signupData.message !== "Email already registered") {
         throw new Error(signupData.message);
       }
 
-      // 2. Login (agar already registered)
+      // 2. Login if already registered
       if (!signupRes.ok) {
         const loginRes = await fetch("/api/auth/login", {
           method: "POST",
@@ -71,10 +108,25 @@ function Apply() {
           credentials: "include",
           body: JSON.stringify({ email: formData.email, password: formData.password }),
         });
+        const loginData = await loginRes.json();
+        console.log("Login:", loginRes.status, loginData);
         if (!loginRes.ok) throw new Error("Login failed. Check your password.");
       }
 
-      // 3. Application create
+      // 3. Resume upload
+      if (resumeFile) {
+        const formDataUpload = new FormData();
+        formDataUpload.append("resume", resumeFile);
+        const resumeRes = await fetch("/api/resume/upload", {
+          method: "POST",
+          credentials: "include",
+          body: formDataUpload,
+        });
+        const resumeData = await resumeRes.json();
+        console.log("Resume:", resumeRes.status, resumeData);
+      }
+
+      // 4. Application create
       const appRes = await fetch("/api/applications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -84,48 +136,43 @@ function Apply() {
           data: { ...formData, experience: exp },
         }),
       });
-      if (!appRes.ok) {
-        const d = await appRes.json();
-        throw new Error(d.message);
-      }
+      const appData = await appRes.json();
+      console.log("Application:", appRes.status, appData);
 
-      // 4. Payment step pe jao
+      if (!appRes.ok) throw new Error(appData.message);
+
+      sessionStorage.setItem("verify_email", formData.email);
       setStep(last - 1);
     } catch (err: any) {
+      console.error("Error:", err);
       setError(err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
-  // Razorpay payment
   const handlePayment = async () => {
     setLoading(true);
     setError("");
     try {
-      // Order create karo
       const orderRes = await fetch("/api/payments/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          amount: 9999,
-          description: "Atelier Careers — Application Fee",
-        }),
+        body: JSON.stringify({ amount: 9999, description: "S.Nehra — Application Fee" }),
       });
       const order = await orderRes.json();
+      console.log("Order:", orderRes.status, order);
       if (!orderRes.ok) throw new Error(order.message);
 
-      // Razorpay checkout open karo
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: order.amount,
         currency: order.currency,
-        name: "Atelier Careers",
+        name: "S.Nehra",
         description: "Application Fee — Cohort 14",
         order_id: order.id,
         handler: async (response: any) => {
-          // Verify payment
           const verifyRes = await fetch("/api/payments/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -136,23 +183,16 @@ function Apply() {
               razorpay_signature: response.razorpay_signature,
             }),
           });
-          if (verifyRes.ok) {
-            setStep(last);
-          } else {
-            setError("Payment verification failed. Contact support.");
-          }
+          if (verifyRes.ok) setStep(last);
+          else setError("Payment verification failed. Contact support.");
         },
-        prefill: {
-          name: formData.fullName,
-          email: formData.email,
-          contact: formData.phone,
-        },
+        prefill: { name: formData.fullName, email: formData.email, contact: formData.phone },
         theme: { color: "#0a0a0a" },
       };
-
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (err: any) {
+      console.error("Payment error:", err);
       setError(err.message || "Payment failed");
     } finally {
       setLoading(false);
@@ -164,7 +204,7 @@ function Apply() {
       <header className="border-b border-[oklch(0_0_0/0.06)] bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 lg:px-10">
           <Link to="/" className="font-display text-xl font-semibold text-ink">
-            Atelier<span className="text-gold">·</span>Careers
+            S<span className="text-gold">.</span>Nehra
           </Link>
           <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
             Step {Math.min(step + 1, last)} of {last}
@@ -208,39 +248,93 @@ function Apply() {
             {step === 0 && (
               <Step title="Let's start with the basics." subtitle="Create your account to begin.">
                 <div className="grid gap-5 sm:grid-cols-2">
-                  <Input
-                    label="Full name"
-                    placeholder="Your Name"
-                    value={formData.fullName}
-                    onChange={(v) => update("fullName", v)}
-                  />
-                  <Input
-                    label="Email"
-                    type="email"
-                    placeholder="your@email.com"
-                    value={formData.email}
-                    onChange={(v) => update("email", v)}
-                  />
-                  <Input
-                    label="Phone"
-                    placeholder="+91 98XXXXXXXX"
-                    value={formData.phone}
-                    onChange={(v) => update("phone", v)}
-                  />
-                  <Input
-                    label="City"
-                    placeholder="Bengaluru"
-                    value={formData.city}
-                    onChange={(v) => update("city", v)}
-                  />
-                  <div className="sm:col-span-2">
+                  <div>
                     <Input
-                      label="Password"
-                      type="password"
-                      placeholder="Create a password"
-                      value={formData.password}
-                      onChange={(v) => update("password", v)}
+                      label="Full name *"
+                      placeholder="Your Name"
+                      value={formData.fullName}
+                      onChange={(v) => update("fullName", v)}
                     />
+                    {formErrors.fullName && (
+                      <p className="mt-1 text-xs text-destructive">{formErrors.fullName}</p>
+                    )}
+                  </div>
+                  <div>
+                    <Input
+                      label="Email *"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={formData.email}
+                      onChange={(v) => update("email", v)}
+                    />
+                    {formErrors.email && (
+                      <p className="mt-1 text-xs text-destructive">{formErrors.email}</p>
+                    )}
+                  </div>
+                  <div>
+                    <Input
+                      label="Phone *"
+                      placeholder="+91 98XXXXXXXX"
+                      value={formData.phone}
+                      onChange={(v) => update("phone", v)}
+                    />
+                    {formErrors.phone && (
+                      <p className="mt-1 text-xs text-destructive">{formErrors.phone}</p>
+                    )}
+                  </div>
+                  <div>
+                    <Input
+                      label="City *"
+                      placeholder="Bengaluru"
+                      value={formData.city}
+                      onChange={(v) => update("city", v)}
+                    />
+                    {formErrors.city && (
+                      <p className="mt-1 text-xs text-destructive">{formErrors.city}</p>
+                    )}
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                      Password *
+                    </label>
+                    <div className="relative mt-2">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Min 8 characters"
+                        value={formData.password}
+                        onChange={(e) => update("password", e.target.value)}
+                        className="w-full rounded-[12px] border border-border bg-background px-4 py-3 pr-10 text-sm placeholder:text-muted-foreground/60 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-ink"
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
+                    {formErrors.password && (
+                      <p className="mt-1 text-xs text-destructive">{formErrors.password}</p>
+                    )}
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                      Confirm Password *
+                    </label>
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Re-enter password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="mt-2 w-full rounded-[12px] border border-border bg-background px-4 py-3 text-sm placeholder:text-muted-foreground/60 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20"
+                    />
+                    {formErrors.confirmPassword && (
+                      <p className="mt-1 text-xs text-destructive">{formErrors.confirmPassword}</p>
+                    )}
                   </div>
                 </div>
               </Step>
@@ -267,6 +361,9 @@ function Apply() {
                     desc="Modern CX for SaaS, fintech, e-commerce."
                   />
                 </div>
+                {formErrors.track && (
+                  <p className="mt-4 text-sm text-destructive">{formErrors.track}</p>
+                )}
               </Step>
             )}
 
@@ -276,12 +373,17 @@ function Apply() {
                 subtitle="The highest qualification you've completed."
               >
                 <div className="grid gap-5 sm:grid-cols-2">
-                  <Input
-                    label="Degree"
-                    placeholder="B.Com"
-                    value={formData.degree}
-                    onChange={(v) => update("degree", v)}
-                  />
+                  <div>
+                    <Input
+                      label="Degree *"
+                      placeholder="B.Com"
+                      value={formData.degree}
+                      onChange={(v) => update("degree", v)}
+                    />
+                    {formErrors.degree && (
+                      <p className="mt-1 text-xs text-destructive">{formErrors.degree}</p>
+                    )}
+                  </div>
                   <Input
                     label="Graduation year"
                     placeholder="2024"
@@ -290,11 +392,14 @@ function Apply() {
                   />
                   <div className="sm:col-span-2">
                     <Input
-                      label="College / University"
+                      label="College / University *"
                       placeholder="St. Joseph's College"
                       value={formData.college}
                       onChange={(v) => update("college", v)}
                     />
+                    {formErrors.college && (
+                      <p className="mt-1 text-xs text-destructive">{formErrors.college}</p>
+                    )}
                   </div>
                 </div>
               </Step>
@@ -325,6 +430,9 @@ function Apply() {
                     </button>
                   ))}
                 </div>
+                {formErrors.exp && (
+                  <p className="mt-4 text-sm text-destructive">{formErrors.exp}</p>
+                )}
               </Step>
             )}
 
@@ -355,12 +463,49 @@ function Apply() {
                 title="Upload your resume."
                 subtitle="PDF preferred. Don't have one? You can skip — we'll build one for you."
               >
-                <label className="flex cursor-pointer flex-col items-center gap-3 rounded-[24px] border-2 border-dashed border-border bg-surface px-8 py-16 text-center transition-colors hover:border-gold">
-                  <Upload className="h-7 w-7 text-muted-foreground" />
-                  <div className="font-display text-xl text-ink">Drop your resume here</div>
-                  <div className="text-xs text-muted-foreground">PDF, DOCX · max 10 MB</div>
-                  <input type="file" className="hidden" />
+                <label
+                  className={`flex cursor-pointer flex-col items-center gap-3 rounded-[24px] border-2 border-dashed px-8 py-16 text-center transition-colors ${
+                    resumeUploaded
+                      ? "border-gold bg-gold/5"
+                      : "border-border bg-surface hover:border-gold"
+                  }`}
+                >
+                  <Upload
+                    className={`h-7 w-7 ${resumeUploaded ? "text-gold" : "text-muted-foreground"}`}
+                  />
+                  <div className="font-display text-xl text-ink">
+                    {resumeUploaded ? `✓ ${resumeFile?.name}` : "Drop your resume here"}
+                  </div>
+                  <div className="text-xs text-muted-foreground">PDF · max 5 MB</div>
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        if (file.size > 5 * 1024 * 1024) {
+                          setError("File 5MB se badi hai");
+                          return;
+                        }
+                        setResumeFile(file);
+                        setResumeUploaded(true);
+                        setError("");
+                      }
+                    }}
+                  />
                 </label>
+                {resumeUploaded && (
+                  <button
+                    onClick={() => {
+                      setResumeFile(null);
+                      setResumeUploaded(false);
+                    }}
+                    className="mt-3 text-xs text-muted-foreground hover:text-destructive transition-colors"
+                  >
+                    Remove file
+                  </button>
+                )}
               </Step>
             )}
 
@@ -389,8 +534,7 @@ function Apply() {
                         key={item}
                         className="flex items-center gap-2 text-sm text-muted-foreground"
                       >
-                        <Check className="h-4 w-4 text-gold" />
-                        {item}
+                        <Check className="h-4 w-4 text-gold" /> {item}
                       </div>
                     ))}
                   </div>
@@ -440,7 +584,10 @@ function Apply() {
               <ArrowLeft className="h-4 w-4" /> Back
             </button>
             <button
-              onClick={() => (step === 5 ? handleApplicationSubmit() : setStep((s) => s + 1))}
+              onClick={() => {
+                if (!validateStep(step)) return;
+                step === 5 ? handleApplicationSubmit() : setStep((s) => s + 1);
+              }}
               disabled={loading}
               className="inline-flex items-center gap-2 rounded-[14px] bg-ink px-7 py-3 text-sm font-medium text-primary-foreground transition-all hover:bg-ink/90 hover:shadow-gold disabled:opacity-50"
             >

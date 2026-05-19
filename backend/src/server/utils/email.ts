@@ -2,13 +2,13 @@ import "dotenv/config";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM = "Atelier Careers <onboarding@resend.dev>";
+const FROM = "S.Nehra <onboarding@resend.dev>";
 
 export const sendVerificationEmail = async (email: string, name: string, code: string) => {
   await resend.emails.send({
     from: FROM,
     to: email,
-    subject: "Verify your email — Atelier Careers",
+    subject: "Verify your email — S.Nehra",
     html: `
       <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:40px 24px">
         <h1 style="font-size:24px;font-weight:600;color:#0a0a0a">Hi ${name},</h1>
@@ -28,7 +28,7 @@ export const sendPasswordResetEmail = async (email: string, name: string, token:
   await resend.emails.send({
     from: FROM,
     to: email,
-    subject: "Reset your password — Atelier Careers",
+    subject: "Reset your password — S.Nehra",
     html: `
       <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:40px 24px">
         <h1 style="font-size:24px;font-weight:600;color:#0a0a0a">Reset your password</h1>

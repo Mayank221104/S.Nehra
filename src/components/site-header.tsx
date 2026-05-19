@@ -16,7 +16,9 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-[oklch(0_0_0/0.06)] bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-12">
         <Link to="/" className="flex items-center gap-2">
-          <span className="font-display text-2xl font-semibold tracking-tight text-ink">Atelier<span className="text-gold">·</span>Careers</span>
+          <span className="font-display text-2xl font-semibold tracking-tight text-ink">
+            S.Nehra
+          </span>
         </Link>
         <nav className="hidden items-center gap-8 lg:flex">
           {links.map((l) => (
@@ -31,7 +33,10 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="hidden items-center gap-3 lg:flex">
-          <Link to="/login" className="text-sm text-muted-foreground transition-colors hover:text-ink">
+          <Link
+            to="/login"
+            className="text-sm text-muted-foreground transition-colors hover:text-ink"
+          >
             Sign in
           </Link>
           <Link

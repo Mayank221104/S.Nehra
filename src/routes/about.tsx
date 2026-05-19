@@ -4,12 +4,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { Reveal } from "@/components/reveal";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title: "About — Atelier Careers" },
-      { name: "description", content: "We're a small team of operators-turned-mentors building the placement consultancy we wish existed when we graduated." },
-    ],
-  }),
+  head: () => ({ meta: [{ title: "About — S.Nehra" }] }),
   component: About,
 });
 
@@ -25,19 +20,15 @@ function About() {
           </h1>
           <div className="mt-10 space-y-6 text-lg leading-relaxed text-muted-foreground">
             <p>
-              Atelier Careers was founded by a group of operators who'd spent a decade
-              hiring, training, and managing early-career talent at SaaS and fintech
-              companies. We kept seeing the same pattern: brilliant graduates with no
-              roadmap, applying to hundreds of jobs, hearing back from none.
+              S.Nehra was founded by a group of operators who spent a decade hiring, training, and
+              managing early-career talent at SaaS and fintech companies.
             </p>
             <p>
-              We started Atelier to fix that — not with another course library, but with
-              a structured, mentor-led consultancy that ends with a written job
-              guarantee. We're small on purpose. Every cohort is curated. Every candidate
-              is known by name.
+              We built this to fix that — not with another course library, but with a structured,
+              mentor-led consultancy that ends with a written job guarantee.
             </p>
             <p className="font-display text-2xl italic text-ink">
-              "If you don't get hired, we haven't done our job."
+              If you do not get hired, we have not done our job.
             </p>
           </div>
         </Reveal>

@@ -47,7 +47,8 @@ describe("AuthShell", () => {
         child
       </AuthShell>,
     );
-    const homeLink = screen.getByRole("link", { name: /atelier/i });
+    // Link text is the brand name — just verify href="/" exists
+    const homeLink = screen.getByRole("link", { name: /s\.nehra|atelier/i });
     expect(homeLink).toHaveAttribute("href", "/");
   });
 

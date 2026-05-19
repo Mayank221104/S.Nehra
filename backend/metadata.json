@@ -1,6 +1,6 @@
 {
-  "name": "Atelier Careers Backend",
-  "description": "Production-grade backend architecture for Atelier Careers, supporting SSR-safe auth, multi-step onboarding, role-based dashboards, and secure Razorpay integration.",
+  "name": "S.Nehra Backend",
+  "description": "Production-grade backend architecture for S.Nehra, supporting SSR-safe auth, multi-step onboarding, role-based dashboards, and secure Razorpay integration.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }

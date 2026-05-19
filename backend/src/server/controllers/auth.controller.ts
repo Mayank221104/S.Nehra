@@ -32,6 +32,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
         password: hashedPassword,
         name,
         role: "CANDIDATE",
+        emailVerified: true, // Apply flow mein auto verify
         verifyCode,
         verifyCodeExpiry,
       },

@@ -6,13 +6,15 @@ import helmet from "helmet";
 import { errorHandler } from "./src/server/middleware/error.middleware";
 import { requestLogger } from "./src/server/middleware/logging.middleware";
 import { apiRateLimiter } from "./src/server/middleware/rateLimit.middleware";
-
 import authRoutes from "./src/server/routes/auth.routes";
 import userRoutes from "./src/server/routes/user.routes";
 import profileRoutes from "./src/server/routes/profile.routes";
 import paymentRoutes from "./src/server/routes/payment.routes";
 import applicationRoutes from "./src/server/routes/application.routes";
 import notificationRoutes from "./src/server/routes/notification.routes";
+import resumeRoutes from "./src/server/routes/resume.ts";
+import visitorRoutes from "./src/server/routes/visitor.routes";
+// ...
 
 const app = express();
 
@@ -37,6 +39,9 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/resume", resumeRoutes);
+app.use("/api/visitors", visitorRoutes);
+// ... other routes
 
 app.use(errorHandler);
 

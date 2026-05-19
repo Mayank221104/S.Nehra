@@ -1,9 +1,12 @@
-import { Router, Request, Response } from "express";
+import "dotenv/config";
+import { Router, Response } from "express";
 import multer from "multer";
-import { v2 as cloudinary } from "cloudinary";
-import { prisma } from "../lib/prisma";
+import cloudinary from "../config/cloudinary";
+import { authenticate, AuthRequest } from "../middleware/auth.middleware";
+import prisma from "../config/prisma";
 
 const router = Router();
+router.use(authenticate);
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -15,14 +18,13 @@ const upload = multer({
 });
 
 // GET /api/profile
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", async (req: AuthRequest, res: Response) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user!.id },
       select: {
         name: true,
         email: true,
-        resumeUrl: true,
         profile: {
           select: {
             phone: true,
@@ -30,81 +32,49 @@ router.get("/", async (req: Request, res: Response) => {
             portfolioUrl: true,
             bio: true,
             location: true,
-            currentRole: true,
-            experienceYears: true,
             skills: true,
             avatarUrl: true,
+            resumeUrl: true,
           },
         },
       },
     });
-
     if (!user) return res.status(404).json({ error: "User not found" });
-
     res.json({
       name: user.name ?? "",
       email: user.email,
-      resumeUrl: user.resumeUrl ?? null,
       phone: user.profile?.phone ?? "",
-      linkedin: user.profile?.linkedinUrl ?? "",
-      portfolio: user.profile?.portfolioUrl ?? "",
+      linkedinUrl: user.profile?.linkedinUrl ?? "",
+      portfolioUrl: user.profile?.portfolioUrl ?? "",
       bio: user.profile?.bio ?? "",
       location: user.profile?.location ?? "",
-      currentRole: user.profile?.currentRole ?? "",
-      experienceYears: user.profile?.experienceYears ?? null,
       skills: user.profile?.skills ?? [],
       avatarUrl: user.profile?.avatarUrl ?? null,
+      resumeUrl: user.profile?.resumeUrl ?? null,
     });
   } catch (err: any) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// PUT /api/profile
-router.put("/", async (req: Request, res: Response) => {
+// POST /api/profile
+router.post("/", async (req: AuthRequest, res: Response) => {
   try {
-    const {
-      name,
-      phone,
-      linkedin,
-      portfolio,
-      bio,
-      location,
-      currentRole,
-      experienceYears,
-      skills,
-    } = req.body;
-
-    await prisma.user.update({
-      where: { id: req.user!.id },
-      data: { name },
-    });
-
+    const { name, phone, linkedinUrl, portfolioUrl, bio, location, skills } = req.body;
+    if (name) await prisma.user.update({ where: { id: req.user!.id }, data: { name } });
     await prisma.profile.upsert({
       where: { userId: req.user!.id },
-      update: {
-        phone,
-        linkedinUrl: linkedin,
-        portfolioUrl: portfolio,
-        bio,
-        location,
-        currentRole,
-        experienceYears: experienceYears ? parseInt(experienceYears) : null,
-        skills: skills ?? [],
-      },
+      update: { phone, linkedinUrl, portfolioUrl, bio, location, skills: skills ?? [] },
       create: {
         userId: req.user!.id,
         phone,
-        linkedinUrl: linkedin,
-        portfolioUrl: portfolio,
+        linkedinUrl,
+        portfolioUrl,
         bio,
         location,
-        currentRole,
-        experienceYears: experienceYears ? parseInt(experienceYears) : null,
         skills: skills ?? [],
       },
     });
-
     res.json({ success: true });
   } catch (err: any) {
     res.status(500).json({ error: err.message });
@@ -112,11 +82,10 @@ router.put("/", async (req: Request, res: Response) => {
 });
 
 // POST /api/profile/avatar
-router.post("/avatar", upload.single("avatar"), async (req: Request, res: Response) => {
+router.post("/avatar", upload.single("avatar"), async (req: AuthRequest, res: Response) => {
   try {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
-
-    const uploadResult = await new Promise<{ secure_url: string }>((resolve, reject) => {
+    const result = await new Promise<{ secure_url: string }>((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         {
           resource_type: "image",
@@ -125,21 +94,19 @@ router.post("/avatar", upload.single("avatar"), async (req: Request, res: Respon
           overwrite: true,
           transformation: [{ width: 400, height: 400, crop: "fill", gravity: "face" }],
         },
-        (error, result) => {
-          if (error || !result) reject(error);
-          else resolve(result as { secure_url: string });
+        (error, data) => {
+          if (error || !data) reject(error);
+          else resolve(data as { secure_url: string });
         },
       );
       stream.end(req.file!.buffer);
     });
-
     await prisma.profile.upsert({
       where: { userId: req.user!.id },
-      update: { avatarUrl: uploadResult.secure_url },
-      create: { userId: req.user!.id, avatarUrl: uploadResult.secure_url },
+      update: { avatarUrl: result.secure_url },
+      create: { userId: req.user!.id, avatarUrl: result.secure_url },
     });
-
-    res.json({ avatarUrl: uploadResult.secure_url });
+    res.json({ avatarUrl: result.secure_url });
   } catch (err: any) {
     res.status(500).json({ error: err.message });
   }

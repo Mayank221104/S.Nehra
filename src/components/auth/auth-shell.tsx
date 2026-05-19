@@ -16,7 +16,7 @@ export function AuthShell({
     <div className="grid min-h-screen lg:grid-cols-2">
       <div className="flex flex-col px-6 py-10 sm:px-12 lg:px-16 lg:py-12">
         <Link to="/" className="font-display text-2xl font-semibold tracking-tight text-ink">
-          Atelier<span className="text-gold">·</span>Careers
+          S.Nehra
         </Link>
         <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-12">
           <h1 className="font-display text-4xl text-ink lg:text-5xl">{title}</h1>
@@ -24,9 +24,7 @@ export function AuthShell({
           <div className="mt-10">{children}</div>
           {footer && <div className="mt-8 text-sm text-muted-foreground">{footer}</div>}
         </div>
-        <div className="text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Atelier Careers
-        </div>
+        <div className="text-xs text-muted-foreground">© {new Date().getFullYear()} S.Nehra</div>
       </div>
       <div className="relative hidden overflow-hidden bg-ink text-primary-foreground lg:flex">
         <div className="grain relative z-10 flex h-full w-full flex-col justify-between p-16">

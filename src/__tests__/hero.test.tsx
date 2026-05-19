@@ -15,7 +15,11 @@ describe("Hero Section — Content", () => {
 
   it("renders cohort badge", () => {
     render(<Hero />);
-    expect(screen.getByText(/cohort 14/i)).toBeInTheDocument();
+    // "Cohort 14" appears in both the badge and the info card — getAllByText handles this
+    const elements = screen.getAllByText(/cohort 14/i);
+    expect(elements.length).toBeGreaterThanOrEqual(1);
+    // Badge specifically has the enrollment text
+    expect(screen.getByText(/cohort 14.*enrolling/i)).toBeInTheDocument();
   });
 
   it("renders primary CTA link to /apply", () => {
@@ -36,7 +40,8 @@ describe("Hero Section — Content", () => {
 
   it("renders placement stats", () => {
     render(<Hero />);
-    expect(screen.getByText("94%")).toBeInTheDocument();
+    // 94% is in the trust badge "94% Placement Rate"
+    expect(screen.getByText(/94%/i)).toBeInTheDocument();
   });
 });
 

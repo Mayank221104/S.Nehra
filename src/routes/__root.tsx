@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { SessionProvider } from "@/lib/session";
 import appCss from "../styles.css?url";
+import CallBackPopup from "@/components/CallBackPopup";
 
 function NotFoundComponent() {
   return (
@@ -109,6 +110,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
         <Outlet />
+        <CallBackPopup autoShowDelay={8000} />
       </SessionProvider>
     </QueryClientProvider>
   );
