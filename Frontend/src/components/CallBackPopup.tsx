@@ -34,11 +34,22 @@ export default function CallBackPopup({
     onClose?.();
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || !phone.trim()) return;
-    setSubmitted(true);
-  };
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!name.trim() || !phone.trim()) return;
+  
+  try {
+    await fetch(`${import.meta.env.VITE_API_URL}/api/visitors`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, phone, source: "popup" }),
+    });
+  } catch (err) {
+    console.error("Visitor save failed:", err);
+  }
+  
+  setSubmitted(true);
+};
 
   if (!isVisible) return null;
 
