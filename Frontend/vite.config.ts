@@ -19,7 +19,7 @@ export default defineConfig({
 
     proxy: {
       "/api": {
-        target: "https://s-nehra.onrender.com",
+        target: "http://localhost:10000",
         changeOrigin: true,
         secure: false,
       },
