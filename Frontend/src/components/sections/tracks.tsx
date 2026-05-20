@@ -8,7 +8,7 @@ const tracks = [
     tag: "12 weeks · Cohort-based",
     summary: "B2B & SaaS sales for revenue-side careers. Discovery, qualification, demo, close.",
     outcomes: ["SDR / BDR roles", "Inside Sales Executive", "Account Executive (entry)"],
-    salary: "₹5.5 – ₹9 L",
+    salary: "Upto ₹5.5 L",
     tools: ["HubSpot", "Salesforce", "LinkedIn Sales Navigator", "Apollo"],
     weeks: [
       "Foundations of revenue, ICP, market mapping",
@@ -25,7 +25,7 @@ const tracks = [
     tag: "12 weeks · Cohort-based",
     summary: "Modern CX for SaaS, fintech & e-commerce. Tone, tooling, escalation, retention.",
     outcomes: ["Support Associate", "Customer Success (entry)", "Tech Support Specialist"],
-    salary: "₹4.5 – ₹7 L",
+    salary: "Upto ₹4.5 L",
     tools: ["Zendesk", "Intercom", "Freshdesk", "Notion"],
     weeks: [
       "Service fundamentals & customer empathy",

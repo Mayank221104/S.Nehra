@@ -8,8 +8,7 @@ const includes = [
   "Unlimited mock interviews",
   "ATS-tuned resume & portfolio",
   "Verified completion certificate",
-  "Warm intros to 180+ partners",
-  "Job guarantee — written contract",
+  "Warm intros to Trusted partners",
   "Lifetime alumni community",
 ];
 
@@ -18,12 +17,12 @@ export function Pricing() {
     <section className="border-b border-[oklch(0_0_0/0.06)] py-20 lg:py-20">
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <div className="eyebrow">07 — Pricing</div>
+          <div className="eyebrow"> Pricing</div>
           <h2 className="mt-6 font-display text-display-lg text-ink">
             One investment. <span className="italic">One outcome.</span>
           </h2>
           <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-            No hidden fees. No coupon games. Pay upfront or after placement — your choice.
+            No hidden fees. No coupon games. Pay upfront and get placed.
           </p>
         </Reveal>
 
@@ -34,7 +33,7 @@ export function Pricing() {
                 <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
                   Full Program
                 </div>
-                <h3 className="mt-3 font-display text-4xl text-ink">S.Nehra Cohort</h3>
+                <h3 className="mt-3 font-display text-4xl text-ink">SNehra Solutions Cohort</h3>
                 <div className="mt-8 flex items-baseline gap-3">
                   <span className="font-display text-6xl text-ink">₹9,999</span>
                   <span className="text-sm text-muted-foreground line-through">₹20,000</span>
@@ -49,7 +48,7 @@ export function Pricing() {
                   Apply for the next cohort
                 </Link>
                 <p className="mt-4 text-xs text-muted-foreground">
-                  Refundable application fee · Limited seats per cohort
+                  Book your Slot · Limited seats per cohort
                 </p>
               </div>
               <div className="p-10">

@@ -7,8 +7,8 @@ const benefits = [
   "1:1 mentorship from senior operators",
   "Mock interviews until you pass",
   "ATS-tuned resume + portfolio",
-  "Warm intros to 180+ hiring partners",
-  "Job guarantee — in writing",
+  "Warm intros to trusted hiring partners",
+  "We stay with you until you land",
 ];
 
 export function Solution() {
@@ -30,7 +30,7 @@ export function Solution() {
             to="/pricing"
             className="mt-10 inline-flex items-center gap-2 rounded-[14px] bg-gold px-7 py-3.5 text-sm font-medium text-ink transition-colors hover:bg-gold-muted"
           >
-            See pricing & guarantee
+            See pricing & details
           </Link>
         </Reveal>
 
