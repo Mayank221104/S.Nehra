@@ -22,7 +22,13 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:8080",
+    origin: [
+      "https://s-nehra.vercel.app",
+      "https://snehrasolutions.com",
+      "https://www.snehrasolutions.com",
+      "http://localhost:8080",
+      "http://localhost:3000",
+    ],
     credentials: true,
   }),
 );
