@@ -37,7 +37,7 @@ const tracks = [
     ],
   },
 ];
-
+const dayRanges = ["D1–D2", "D2–D5", "D5–D10", "D10–D17", "D17–D21"];
 export function Tracks() {
   return (
     <section id="tracks" className="border-b border-[oklch(0_0_0/0.06)] py-24 lg:py-32">
@@ -76,12 +76,14 @@ export function Tracks() {
               <div className="mt-8">
                 <div className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">Daily Roadmap</div>
                 <ol className="mt-4 space-y-2.5">
-                  {t.weeks.map((D, i) => (
-                    <li key={D} className="flex gap-4 text-sm text-foreground">
-                      <span className="w-10 shrink-0 font-display text-base text-gold">D{(2*i - 1) }–{(2*i - 1) - 1}</span>
-                      <span className="text-muted-foreground">{D}</span>
-                    </li>
-                  ))}
+                     {t.weeks.map((D, i) => (
+                       <li key={D} className="flex gap-4 text-sm text-foreground">
+                         <span className="w-16 shrink-0 font-display text-base text-gold whitespace-nowrap">
+                           {dayRanges[i]}
+                         </span>
+                         <span className="text-muted-foreground">{D}</span>
+                       </li>
+                     ))}
                 </ol>
               </div>
 
