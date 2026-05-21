@@ -113,6 +113,29 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  if (import.meta.env.VITE_MAINTENANCE === "true") {
+    return (
+      <div style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#f5f1ea",
+        textAlign: "center",
+        padding: "24px",
+      }}>
+        <div style={{ fontSize: "40px", fontWeight: 600, color: "#0a0a0a" }}>
+          🚀 Going Live at 1:00 PM
+        </div>
+        <div style={{ marginTop: "16px", fontSize: "18px", color: "#666" }}>
+          We're putting the finishing touches. See you soon!
+        </div>
+      </div>
+    );
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
