@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     q: "Can I pay after placement?",
-    a: "Our program fee covers 12 weeks of training, certification, and placement assistance. Payment is required upfront as we invest fully in your preparation from day one — not just the outcome.",
+    a: "Our program fee covers 21 days of training, certification, and placement assistance. Payment is required upfront as we invest fully in your preparation from day one — not just the outcome.",
   },
   {
     q: "When is the next cohort?",

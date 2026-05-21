@@ -30,7 +30,7 @@ export function Hero() {
 
           <Reveal delay={0.1}>
             <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground lg:text-lg">
-              A 12-week placement consultancy for ambitious graduates. We train you, certify you,
+              A 21-day placement consultancy for ambitious graduates. We train you, certify you,
               and place you in roles worth keeping — backed by a trusted network.
             </p>
           </Reveal>

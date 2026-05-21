@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Reveal } from "../reveal";
 
 const includes = [
-  "12 weeks live cohort training",
+  "21 days live cohort training",
   "1:1 mentorship & feedback loops",
   "Unlimited mock interviews",
   "ATS-tuned resume & portfolio",

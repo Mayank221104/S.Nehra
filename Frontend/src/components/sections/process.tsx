@@ -1,7 +1,7 @@
 import { Reveal } from "../reveal";
 
 const steps = [
-  { n: "01", t: "Train", d: "12 weeks of live cohort training. Frameworks, simulations, mentors who've shipped." },
+  { n: "01", t: "Train", d: "21 days of live cohort training. Frameworks, simulations, mentors who've shipped." },
   { n: "02", t: "Get Certified", d: "Capstone assessment + employer-recognized certificate. Verified, ATS-friendly." },
   { n: "03", t: "Get Hired", d: "Warm intros, interview prep, and ongoing support until you sign the offer." },
 ];

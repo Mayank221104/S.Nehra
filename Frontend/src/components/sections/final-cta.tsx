@@ -9,11 +9,11 @@ export function FinalCTA() {
         <Reveal>
           <div className="eyebrow text-primary-foreground/60">09 — Next Cohort</div>
           <h2 className="mt-6 font-display text-display-xl leading-[1.05] text-primary-foreground">
-            The next 12 weeks will pass anyway.
+            The next 21 days will pass anyway.
             <span className="block italic text-gold-muted">Spend them getting hired.</span>
           </h2>
           <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-primary-foreground/70">
-            40 seats. Closes when full. Applications are reviewed in 48 hours.
+            40 seats. Closes when full. Applications are reviewed in 5-7 minutes.
           </p>
           <div className="mt-12 flex flex-wrap justify-center gap-4">
             <Link
