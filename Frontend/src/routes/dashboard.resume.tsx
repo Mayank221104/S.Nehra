@@ -21,7 +21,7 @@ function ResumeBuilder() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    fetch("/api/resume", { credentials: "include" })
+    fetch(`${import.meta.env.VITE_API_URL}/api/resume`, { credentials: "include" })
       .then((r) => r.json())
       .then((data) => setResumeUrl(data.resumeUrl))
       .finally(() => setLoading(false));
@@ -45,7 +45,7 @@ function ResumeBuilder() {
     formData.append("resume", file);
 
     try {
-      const res = await fetch("/api/resume/upload", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/resume/upload`, {
         method: "POST",
         credentials: "include",
         body: formData,
@@ -66,7 +66,7 @@ function ResumeBuilder() {
     if (!confirm("Resume delete karna chahte ho?")) return;
     setDeleting(true);
     try {
-      await fetch("/api/resume", { method: "DELETE", credentials: "include" });
+      await fetch(`${import.meta.env.VITE_API_URL}/api/resume`, { method: "DELETE", credentials: "include" });
       setResumeUrl(null);
     } finally {
       setDeleting(false);

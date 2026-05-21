@@ -475,7 +475,7 @@ export function DashboardLayout() {
       .toUpperCase() ?? "?";
 &nbsp;
   const handleLogout = <span class="fstat-no" title="function not covered" >async () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });</span>
+<span class="cstat-no" title="statement not covered" >    await fetch(`${import.meta.env.VITE_API_URL}/api/auth/logout`, { method: "POST", credentials: "include" });</span>
 <span class="cstat-no" title="statement not covered" >    navigate({ to: "/login" });</span>
   };
 &nbsp;

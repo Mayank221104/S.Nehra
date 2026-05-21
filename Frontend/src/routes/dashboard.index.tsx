@@ -268,7 +268,7 @@ function AvatarUpload({
     const formData = new FormData();
     formData.append("avatar", file);
     try {
-      const res = await fetch("/api/profile/avatar", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/profile/avatar`, {
         method: "POST",
         credentials: "include",
         body: formData,
@@ -340,7 +340,7 @@ function Profile() {
   });
 
   useEffect(() => {
-    fetch("/api/profile", { credentials: "include" })
+    fetch(`${import.meta.env.VITE_API_URL}/api/profile`, { credentials: "include" })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (data) {
@@ -366,7 +366,7 @@ function Profile() {
   const saveProfile = async () => {
     setSaving(true);
     try {
-      await fetch("/api/profile", {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/profile`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

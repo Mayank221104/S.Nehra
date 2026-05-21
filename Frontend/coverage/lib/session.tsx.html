@@ -198,7 +198,7 @@ export function <span class="fstat-no" title="function not covered" >SessionProv
 &nbsp;
   const fetchMe = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >async () =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >    try {</span>
-      const res = <span class="cstat-no" title="statement not covered" >await fetch("/api/auth/me", { credentials: "include" });</span>
+      const res = <span class="cstat-no" title="statement not covered" >await fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, { credentials: "include" });</span>
 <span class="cstat-no" title="statement not covered" >      if (res.ok) {</span>
         const data = <span class="cstat-no" title="statement not covered" >await res.json();</span>
 <span class="cstat-no" title="statement not covered" >        setUser(data.user);</span>

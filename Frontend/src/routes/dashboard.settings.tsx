@@ -48,7 +48,7 @@ function Settings() {
     setPasswordLoading(true);
     setPasswordMsg(null);
     try {
-      const res = await fetch("/api/auth/change-password", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/change-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -71,11 +71,11 @@ function Settings() {
     if (deleteConfirm !== user?.email) return;
     setDeleteLoading(true);
     try {
-      await fetch("/api/auth/delete-account", {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/auth/delete-account`, {
         method: "DELETE",
         credentials: "include",
       });
-      await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+      await fetch(`${import.meta.env.VITE_API_URL}/api/auth/logout`, { method: "POST", credentials: "include" });
       navigate({ to: "/" });
     } catch {
       setDeleteLoading(false);
