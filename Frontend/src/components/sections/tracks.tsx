@@ -5,7 +5,7 @@ const tracks = [
   {
     icon: BarChart3,
     name: "Sales Excellence",
-    tag: "12 weeks · Cohort-based",
+    tag: "21 days · Cohort-based",
     summary: "B2B & SaaS sales for revenue-side careers. Discovery, qualification, demo, close.",
     outcomes: ["SDR / BDR roles", "Inside Sales Executive", "Account Executive (entry)"],
     salary: "Upto ₹5.5 L",
@@ -22,7 +22,7 @@ const tracks = [
   {
     icon: Headphones,
     name: "Customer Support Mastery",
-    tag: "12 weeks · Cohort-based",
+    tag: "21 days · Cohort-based",
     summary: "Modern CX for SaaS, fintech & e-commerce. Tone, tooling, escalation, retention.",
     outcomes: ["Support Associate", "Customer Success (entry)", "Tech Support Specialist"],
     salary: "Upto ₹4.5 L",
@@ -74,12 +74,12 @@ export function Tracks() {
               <p className="mt-5 text-sm leading-relaxed text-muted-foreground">{t.summary}</p>
 
               <div className="mt-8">
-                <div className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">Weekly Roadmap</div>
+                <div className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">Daily Roadmap</div>
                 <ol className="mt-4 space-y-2.5">
-                  {t.weeks.map((w, i) => (
-                    <li key={w} className="flex gap-4 text-sm text-foreground">
-                      <span className="w-10 shrink-0 font-display text-base text-gold">W{(i + 1) * 2 - 1}–{(i + 1) * 2}</span>
-                      <span className="text-muted-foreground">{w}</span>
+                  {t.weeks.map((D, i) => (
+                    <li key={D} className="flex gap-4 text-sm text-foreground">
+                      <span className="w-10 shrink-0 font-display text-base text-gold">D{(2*i - 1) }–{(2*i - 1) - 1}</span>
+                      <span className="text-muted-foreground">{D}</span>
                     </li>
                   ))}
                 </ol>
