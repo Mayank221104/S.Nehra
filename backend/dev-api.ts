@@ -17,6 +17,8 @@ import visitorRoutes from "./src/server/routes/visitor.routes";
 // ...
 
 const app = express();
+const app = express();
+app.set("trust proxy", 1); // Render ke liye zaroori hai
 
 // Security
 app.use(helmet());
