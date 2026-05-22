@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [tsconfigPaths()],
+  plugins: [tanstackStart({ ssr: false }), react(), tailwindcss()],
   test: {
     globals: true,
     environment: "jsdom",
