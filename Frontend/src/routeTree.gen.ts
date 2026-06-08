@@ -11,8 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as TracksRouteImport } from './routes/tracks'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as RefundRouteImport } from './routes/refund'
 import { Route as ProcessRouteImport } from './routes/process'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
@@ -40,14 +43,29 @@ const TracksRoute = TracksRouteImport.update({
   path: '/tracks',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RefundRoute = RefundRouteImport.update({
+  id: '/refund',
+  path: '/refund',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProcessRoute = ProcessRouteImport.update({
   id: '/process',
   path: '/process',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PricingRoute = PricingRouteImport.update({
@@ -140,8 +158,11 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
   '/process': typeof ProcessRoute
+  '/refund': typeof RefundRoute
   '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
   '/tracks': typeof TracksRoute
   '/verify': typeof VerifyRoute
   '/dashboard/certificates': typeof DashboardCertificatesRoute
@@ -161,8 +182,11 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
   '/process': typeof ProcessRoute
+  '/refund': typeof RefundRoute
   '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
   '/tracks': typeof TracksRoute
   '/verify': typeof VerifyRoute
   '/dashboard/certificates': typeof DashboardCertificatesRoute
@@ -184,8 +208,11 @@ export interface FileRoutesById {
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
   '/process': typeof ProcessRoute
+  '/refund': typeof RefundRoute
   '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
   '/tracks': typeof TracksRoute
   '/verify': typeof VerifyRoute
   '/dashboard/certificates': typeof DashboardCertificatesRoute
@@ -208,8 +235,11 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/login'
     | '/pricing'
+    | '/privacy'
     | '/process'
+    | '/refund'
     | '/signup'
+    | '/terms'
     | '/tracks'
     | '/verify'
     | '/dashboard/certificates'
@@ -229,8 +259,11 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/login'
     | '/pricing'
+    | '/privacy'
     | '/process'
+    | '/refund'
     | '/signup'
+    | '/terms'
     | '/tracks'
     | '/verify'
     | '/dashboard/certificates'
@@ -251,8 +284,11 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/login'
     | '/pricing'
+    | '/privacy'
     | '/process'
+    | '/refund'
     | '/signup'
+    | '/terms'
     | '/tracks'
     | '/verify'
     | '/dashboard/certificates'
@@ -274,8 +310,11 @@ export interface RootRouteChildren {
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   PricingRoute: typeof PricingRoute
+  PrivacyRoute: typeof PrivacyRoute
   ProcessRoute: typeof ProcessRoute
+  RefundRoute: typeof RefundRoute
   SignupRoute: typeof SignupRoute
+  TermsRoute: typeof TermsRoute
   TracksRoute: typeof TracksRoute
   VerifyRoute: typeof VerifyRoute
 }
@@ -296,6 +335,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TracksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -303,11 +349,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/refund': {
+      id: '/refund'
+      path: '/refund'
+      fullPath: '/refund'
+      preLoaderRoute: typeof RefundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/process': {
       id: '/process'
       path: '/process'
       fullPath: '/process'
       preLoaderRoute: typeof ProcessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pricing': {
@@ -460,8 +520,11 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   PricingRoute: PricingRoute,
+  PrivacyRoute: PrivacyRoute,
   ProcessRoute: ProcessRoute,
+  RefundRoute: RefundRoute,
   SignupRoute: SignupRoute,
+  TermsRoute: TermsRoute,
   TracksRoute: TracksRoute,
   VerifyRoute: VerifyRoute,
 }
