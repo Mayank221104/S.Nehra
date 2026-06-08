@@ -31,9 +31,9 @@ const cols = [
   {
     title: "Legal",
     links: [
-      { label: "Privacy", to: "/" },
-      { label: "Terms", to: "/" },
-      { label: "Refunds", to: "/" },
+      { label: "Privacy", to: "/privacy" },
+      { label: "Terms", to: "/terms" },
+      { label: "Refunds", to: "/refund" },
     ],
   },
 ];
