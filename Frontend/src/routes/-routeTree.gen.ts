@@ -8,30 +8,30 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root.tsx'
-import { Route as VerifyRouteImport } from './routes/verify.tsx'
-import { Route as TracksRouteImport } from './routes/tracks.tsx'
-import { Route as TermsRouteImport } from './routes/terms.tsx'
-import { Route as SignupRouteImport } from './routes/signup.tsx'
-import { Route as RefundRouteImport } from './routes/refund.tsx'
-import { Route as ProcessRouteImport } from './routes/process.tsx'
-import { Route as PrivacyRouteImport } from './routes/privacy.tsx'
-import { Route as PricingRouteImport } from './routes/pricing.tsx'
-import { Route as LoginRouteImport } from './routes/login.tsx'
-import { Route as ForgotPasswordRouteImport } from './routes/forgot-password.tsx'
-import { Route as DashboardRouteImport } from './routes/dashboard.tsx'
-import { Route as ContactRouteImport } from './routes/contact.tsx'
-import { Route as ApplyRouteImport } from './routes/apply.tsx'
-import { Route as AboutRouteImport } from './routes/about.tsx'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as DashboardIndexRouteImport } from './routes/dashboard.index.tsx'
-import { Route as DashboardTrainingRouteImport } from './routes/dashboard.training.tsx'
-import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings.tsx'
-import { Route as DashboardResumeRouteImport } from './routes/dashboard.resume.tsx'
-import { Route as DashboardProfileRouteImport } from './routes/dashboard.profile.tsx'
-import { Route as DashboardJobsRouteImport } from './routes/dashboard.jobs.tsx'
-import { Route as DashboardInterviewsRouteImport } from './routes/dashboard.interviews.tsx'
-import { Route as DashboardCertificatesRouteImport } from './routes/dashboard.certificates.tsx'
+import { Route as rootRouteImport } from '../../src/routes/__root.tsx'
+import { Route as VerifyRouteImport } from '../../src/routes/verify.tsx'
+import { Route as TracksRouteImport } from '../../src/routes/tracks.tsx'
+import { Route as TermsRouteImport } from '../../src/routes/terms.tsx'
+import { Route as SignupRouteImport } from '../../src/routes/signup.tsx'
+import { Route as RefundRouteImport } from '../../src/routes/refund.tsx'
+import { Route as ProcessRouteImport } from '../../src/routes/process.tsx'
+import { Route as PrivacyRouteImport } from '../../src/routes/privacy.tsx'
+import { Route as PricingRouteImport } from '../../src/routes/pricing.tsx'
+import { Route as LoginRouteImport } from '../../src/routes/login.tsx'
+import { Route as ForgotPasswordRouteImport } from '../../src/routes/forgot-password.tsx'
+import { Route as DashboardRouteImport } from '../../src/routes/dashboard.tsx'
+import { Route as ContactRouteImport } from '../../src/routes/contact.tsx'
+import { Route as ApplyRouteImport } from '../../src/routes/apply.tsx'
+import { Route as AboutRouteImport } from '../../src/routes/about.tsx'
+import { Route as IndexRouteImport } from '../../src/routes/index'
+import { Route as DashboardIndexRouteImport } from '../../src/routes/dashboard.index.tsx'
+import { Route as DashboardTrainingRouteImport } from '../../src/routes/dashboard.training.tsx'
+import { Route as DashboardSettingsRouteImport } from '../../src/routes/dashboard.settings.tsx'
+import { Route as DashboardResumeRouteImport } from '../../src/routes/dashboard.resume.tsx'
+import { Route as DashboardProfileRouteImport } from '../../src/routes/dashboard.profile.tsx'
+import { Route as DashboardJobsRouteImport } from '../../src/routes/dashboard.jobs.tsx'
+import { Route as DashboardInterviewsRouteImport } from '../../src/routes/dashboard.interviews.tsx'
+import { Route as DashboardCertificatesRouteImport } from '../../src/routes/dashboard.certificates.tsx'
 
 const VerifyRoute = VerifyRouteImport.update({
   id: '/verify',
@@ -459,7 +459,7 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/dashboard/profile'
       preLoaderRoute: typeof DashboardProfileRouteImport
-      parentRoute: typeof DashboardRoute
+      parentRoute: typeof rootRouteImport
     }
     '/dashboard/jobs': {
       id: '/dashboard/jobs'
@@ -528,15 +528,17 @@ const rootRouteChildren: RootRouteChildren = {
   TracksRoute: TracksRoute,
   VerifyRoute: VerifyRoute,
 }
+
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
+import type { getRouter } from '../../src/router.tsx'
+import type { startInstance } from './start.ts'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true
     router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }
