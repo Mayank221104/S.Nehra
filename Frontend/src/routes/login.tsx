@@ -29,6 +29,10 @@ function Login() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
+      
+      document.cookie = `paymentToken=${data.token}; path=/; max-age=86400; SameSite=Lax; Secure`;
+      localStorage.setItem("paymentToken", data.token);
+
       await refetch();
       navigate({ to: "/dashboard" });
     } catch (err: any) {
