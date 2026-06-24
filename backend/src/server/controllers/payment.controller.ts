@@ -8,7 +8,7 @@ export const createOrder = async (req: any, res: Response, next: NextFunction) =
   try {
     const { amount, description } = req.body; // Amount in INR
     const options = {
-      amount: amount, // in rupees
+      amount: amount * 100, // in paise
       currency: "INR",
       receipt: `receipt_${Date.now()}`,
     };
