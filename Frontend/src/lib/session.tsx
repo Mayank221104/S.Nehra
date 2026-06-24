@@ -27,7 +27,12 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   const fetchMe = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, { credentials: "include" });
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, { credentials: "include" ,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("paymentToken")}`
+        }
+      });
       if (res.ok) {
         const data = await res.json();
         setUser(data.user);
