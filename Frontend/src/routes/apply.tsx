@@ -161,7 +161,7 @@ const orderRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/creat
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify({
-              razorpay_order_id: response.razorpay_order_id,
+              razorpay_order_id: response.razorpay_order_id || order.id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
             }),
