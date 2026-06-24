@@ -39,7 +39,7 @@ export function Pricing() {
                   <span className="text-sm text-muted-foreground line-through">₹10,000</span>
                 </div>
                 <p className="mt-3 text-xs uppercase tracking-[0.18em] text-gold">
-                  Or ₹0 upfront · ISA after placement
+                  50% OFF · Special Launch Price for the first Batch
                 </p>
                 <Link
                   to="/apply"
