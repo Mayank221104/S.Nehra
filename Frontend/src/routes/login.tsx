@@ -23,7 +23,7 @@ function Login() {
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("paymentToken")}` },
         credentials: "include",
         body: JSON.stringify({ email, password }),
       });
