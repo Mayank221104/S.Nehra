@@ -35,8 +35,8 @@ export function Pricing() {
                 </div>
                 <h3 className="mt-3 font-display text-4xl text-ink">SNehra Solutions Cohort</h3>
                 <div className="mt-8 flex items-baseline gap-3">
-                  <span className="font-display text-6xl text-ink">₹9,999</span>
-                  <span className="text-sm text-muted-foreground line-through">₹20,000</span>
+                  <span className="font-display text-6xl text-ink">₹4,999</span>
+                  <span className="text-sm text-muted-foreground line-through">₹10,000</span>
                 </div>
                 <p className="mt-3 text-xs uppercase tracking-[0.18em] text-gold">
                   Or ₹0 upfront · ISA after placement

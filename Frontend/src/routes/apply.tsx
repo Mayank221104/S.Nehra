@@ -142,7 +142,7 @@ const orderRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/creat
     "Authorization": `Bearer ${paymentToken}`,
   },
   credentials: "include",
-        body: JSON.stringify({ amount: 999999, description: "S.Nehra — Application Fee" }),
+        body: JSON.stringify({ amount: 499900, description: "S.Nehra — Application Fee" }),
       });
       const order = await orderRes.json();
       console.log("Order:", orderRes.status, order);
@@ -454,7 +454,7 @@ const orderRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/creat
                         No hidden charges. 
                       </div>
                     </div>
-                    <div className="font-display text-4xl text-ink">₹9,999</div>
+                    <div className="font-display text-4xl text-ink">₹4,999</div>
                   </div>
                   <div className="mt-6 space-y-2">
                     {[
@@ -475,7 +475,7 @@ const orderRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/creat
                     disabled={loading}
                     className="mt-8 w-full rounded-[14px] bg-ink px-6 py-4 text-sm font-medium text-primary-foreground transition-all hover:bg-ink/90 hover:shadow-gold disabled:opacity-50"
                   >
-                    {loading ? "Processing..." : "Pay ₹9,999 — Secure My Seat"}
+                    {loading ? "Processing..." : "Pay ₹4,999 — Secure My Seat"}
                   </button>
                   <p className="mt-3 text-center text-xs text-muted-foreground">
                     Powered by Razorpay · 256-bit SSL
