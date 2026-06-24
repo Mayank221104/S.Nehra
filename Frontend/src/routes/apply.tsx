@@ -142,7 +142,7 @@ const orderRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/creat
     "Authorization": `Bearer ${paymentToken}`,
   },
   credentials: "include",
-        body: JSON.stringify({ amount: 400, description: "S.Nehra — Application Fee" }),
+        body: JSON.stringify({ amount: 4999900, description: "S.Nehra — Application Fee" }),
       });
       const order = await orderRes.json();
       console.log("Order:", orderRes.status, order);
@@ -150,7 +150,7 @@ const orderRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/creat
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-        amount: order.amount * 100, // convert to paise
+        amount: order.amount, // convert to paise
         currency: order.currency,
         name: "SNehra Solutions",
         description: "Application Fee",
@@ -158,7 +158,7 @@ const orderRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/creat
         handler: async (response: any) => {
           const verifyRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/verify`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${paymentToken}` },
             credentials: "include",
             body: JSON.stringify({
               razorpay_order_id: response.razorpay_order_id || order.id,
