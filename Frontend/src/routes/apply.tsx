@@ -142,7 +142,7 @@ const orderRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/creat
     "Authorization": `Bearer ${paymentToken}`,
   },
   credentials: "include",
-        body: JSON.stringify({ amount: 4999, description: "S.Nehra — Application Fee" }),
+        body: JSON.stringify({ amount: 400, description: "S.Nehra — Application Fee" }),
       });
       const order = await orderRes.json();
       console.log("Order:", orderRes.status, order);
