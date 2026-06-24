@@ -150,7 +150,7 @@ const orderRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/creat
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-        amount: order.amount * 100, // convert to paise
+        amount: order.amount, // in rupees
         currency: order.currency,
         name: "SNehra Solutions",
         description: "Application Fee",
