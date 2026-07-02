@@ -23,17 +23,18 @@ function Login() {
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("paymentToken")}` },
-        credentials: "include",
+        headers: { "Content-Type": "application/json" }, // removed stale paymentToken header
+        credentials: "include",                           // sends & receives HttpOnly cookies
         body: JSON.stringify({ email, password }),
       });
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
-      
-      document.cookie = `paymentToken=${data.token}; path=/; max-age=86400; SameSite=Lax; Secure`;
-      localStorage.setItem("paymentToken", data.token);
 
-      await refetch();
+      // Backend sets HttpOnly accessToken + refreshToken cookies automatically.
+      // Do NOT touch document.cookie or localStorage for auth tokens.
+
+      await refetch(); // re-reads /api/auth/me — now works because cookie is set
       navigate({ to: "/dashboard" });
     } catch (err: any) {
       setError(err.message || "Something went wrong");

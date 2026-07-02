@@ -12,9 +12,6 @@ import profileRoutes from "./src/server/routes/profile.routes";
 import paymentRoutes from "./src/server/routes/payment.routes";
 import applicationRoutes from "./src/server/routes/application.routes";
 import notificationRoutes from "./src/server/routes/notification.routes";
-import resumeRoutes from "./src/server/routes/resume.ts";
-import visitorRoutes from "./src/server/routes/visitor.routes";
-// ...
 
 const app = express();
 app.set("trust proxy", 1);
@@ -33,6 +30,7 @@ app.use(
     credentials: true,
   }),
 );
+
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 app.use(requestLogger);
@@ -46,9 +44,6 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/notifications", notificationRoutes);
-app.use("/api/resume", resumeRoutes);
-app.use("/api/visitors", visitorRoutes);
-// ... other routes
 
 app.use(errorHandler);
 
