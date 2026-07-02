@@ -17,13 +17,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "A 12-week premium placement consultancy. We train, certify, and place talent into careers worth keeping.",
+          "A placement consultancy. We train, certify, and place talent into careers worth keeping.",
       },
       { property: "og:title", content: "SNehra Solutions — Stop Applying. Start Getting Hired." },
       {
         property: "og:description",
         content:
-          "Premium placement consultancy with extensive experience. 94% placement rate. Trusting hiring partners.",
+          "A placement consultancy with extensive experience. 94% placement rate. Trusting hiring partners.",
       },
     ],
   }),
