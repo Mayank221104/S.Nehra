@@ -1,4 +1,4 @@
-import { ArrowUpRight, BarChart3, Headphones } from "lucide-react";
+import { ArrowUpRight, BarChart3, Headphones, TrendingUp, Users, Megaphone, Briefcase } from "lucide-react";
 import { Reveal, RevealGroup, RevealItem } from "../reveal";
 
 const tracks = [
@@ -36,8 +36,78 @@ const tracks = [
       "Live shadowing + interview prep",
     ],
   },
+  {
+    icon: TrendingUp,
+    name: "Business Development",
+    tag: "21 days · Cohort-based",
+    summary: "Strategic partnerships, market expansion and revenue growth for high-growth startups.",
+    outcomes: ["BD Executive", "Partnerships Associate", "Growth Associate"],
+    salary: "Upto ₹6 L",
+    tools: ["LinkedIn", "Apollo", "Notion", "Google Sheets"],
+    weeks: [
+      "BD fundamentals, TAM/SAM/SOM analysis",
+      "Prospecting, cold outreach & warm intros",
+      "Partnership frameworks & deal structuring",
+      "Negotiation tactics & term sheets basics",
+      "Pipeline management & CRM workflows",
+      "Live BD simulation + interview prep",
+    ],
+  },
+  {
+    icon: Users,
+    name: "Human Resources & Talent",
+    tag: "21 days · Cohort-based",
+    summary: "End-to-end HR for modern companies — hiring, onboarding, culture and compliance.",
+    outcomes: ["HR Executive", "Talent Acquisition Specialist", "HR Generalist"],
+    salary: "Upto ₹4.8 L",
+    tools: ["Darwinbox", "Keka", "LinkedIn Recruiter", "Google Meet"],
+    weeks: [
+      "HR fundamentals, org design & JD crafting",
+      "Sourcing, screening & interview frameworks",
+      "Onboarding, HRIS & documentation",
+      "Payroll basics, compliance & labor law",
+      "Performance cycles, PIP & exit process",
+      "HR case studies + mock interviews",
+    ],
+  },
+  {
+    icon: Megaphone,
+    name: "Digital Marketing",
+    tag: "21 days · Cohort-based",
+    summary: "Performance and content marketing for brands that want real ROI — not just reach.",
+    outcomes: ["Digital Marketing Executive", "Performance Marketing Analyst", "Social Media Manager"],
+    salary: "Upto ₹5 L",
+    tools: ["Meta Ads", "Google Ads", "Canva", "HubSpot"],
+    weeks: [
+      "Marketing fundamentals & consumer psychology",
+      "SEO, content strategy & copywriting",
+      "Paid media: Meta & Google Ads",
+      "Email marketing, automation & funnels",
+      "Analytics: GA4, dashboards & reporting",
+      "Live campaign + portfolio review",
+    ],
+  },
+  {
+    icon: Briefcase,
+    name: "Operations & Project Management",
+    tag: "21 days · Cohort-based",
+    summary: "Process design, cross-functional coordination and delivery management for ops roles.",
+    outcomes: ["Operations Executive", "Project Coordinator", "Business Analyst (entry)"],
+    salary: "Upto ₹5.2 L",
+    tools: ["Notion", "Jira", "Asana", "Google Workspace"],
+    weeks: [
+      "Ops fundamentals, process mapping & SOPs",
+      "Project planning: scope, timeline & risk",
+      "Agile & Scrum for non-tech teams",
+      "Data-driven decisions: sheets & dashboards",
+      "Vendor management & stakeholder comms",
+      "Live ops case study + interview prep",
+    ],
+  },
 ];
+
 const dayRanges = ["D1–D2", "D2–D5", "D5–D10", "D10–D17", "D17–D21"];
+
 export function Tracks() {
   return (
     <section id="tracks" className="border-b border-[oklch(0_0_0/0.06)] py-24 lg:py-32">
@@ -45,7 +115,7 @@ export function Tracks() {
         <Reveal className="max-w-3xl">
           <div className="eyebrow">03 — Career Tracks</div>
           <h2 className="mt-6 font-display text-display-lg text-ink">
-            Two tracks. Both <span className="italic">in demand.</span> Both <span className="italic">backable.</span>
+            Six tracks. All <span className="italic">in demand.</span> All <span className="italic">backable.</span>
           </h2>
           <p className="mt-6 text-base leading-relaxed text-muted-foreground">
             We don't teach what's trendy. We teach what hires — high-growth, non-technical
@@ -76,14 +146,14 @@ export function Tracks() {
               <div className="mt-8">
                 <div className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">Daily Roadmap</div>
                 <ol className="mt-4 space-y-2.5">
-                     {t.weeks.map((D, i) => (
-                       <li key={D} className="flex gap-4 text-sm text-foreground">
-                         <span className="w-16 shrink-0 font-display text-base text-gold whitespace-nowrap">
-                           {dayRanges[i]}
-                         </span>
-                         <span className="text-muted-foreground">{D}</span>
-                       </li>
-                     ))}
+                  {t.weeks.map((D, i) => (
+                    <li key={D} className="flex gap-4 text-sm text-foreground">
+                      <span className="w-16 shrink-0 font-display text-base text-gold whitespace-nowrap">
+                        {dayRanges[i]}
+                      </span>
+                      <span className="text-muted-foreground">{D}</span>
+                    </li>
+                  ))}
                 </ol>
               </div>
 
@@ -104,7 +174,10 @@ export function Tracks() {
                 </div>
               </div>
 
-              <a className="mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-ink transition-colors hover:text-gold" href="/apply">
+              <a
+                className="mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-ink transition-colors hover:text-gold"
+                href="/apply"
+              >
                 Apply to this track <ArrowUpRight className="h-4 w-4" />
               </a>
             </RevealItem>
