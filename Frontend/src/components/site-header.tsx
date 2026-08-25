@@ -17,7 +17,7 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-12">
         <Link to="/" className="flex items-center gap-2.5">
             <img
-              src="/logo.png"
+              src="/Logo.png"
               alt="Snehra Solutions"
               className="h-9 w-9 object-contain"
             />
