@@ -19,7 +19,7 @@ export function SiteHeader() {
             <img
               src="/Logo.png"
               alt="Snehra Solutions"
-              className="h-9 w-9 object-contain"
+              className="h-13 w-13 object-contain"
             />
             <span className="font-display text-2xl font-semibold tracking-tight text-ink">
               Snehra Solutions
