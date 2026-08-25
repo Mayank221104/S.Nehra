@@ -1,5 +1,6 @@
 import { ArrowUpRight, BarChart3, Headphones, TrendingUp, Users, Megaphone, Briefcase } from "lucide-react";
 import { Reveal, RevealGroup, RevealItem } from "../reveal";
+import { Code2 } from "lucide-react";
 
 const tracks = [
   {
@@ -37,22 +38,35 @@ const tracks = [
     ],
   },
   {
-    icon: TrendingUp,
-    name: "Business Development",
-    tag: "21 days · Cohort-based",
-    summary: "Strategic partnerships, market expansion and revenue growth for high-growth startups.",
-    outcomes: ["BD Executive", "Partnerships Associate", "Growth Associate"],
-    salary: "Upto ₹6 L",
-    tools: ["LinkedIn", "Apollo", "Notion", "Google Sheets"],
-    weeks: [
-      "BD fundamentals, TAM/SAM/SOM analysis",
-      "Prospecting, cold outreach & warm intros",
-      "Partnership frameworks & deal structuring",
-      "Negotiation tactics & term sheets basics",
-      "Pipeline management & CRM workflows",
-      "Live BD simulation + interview prep",
-    ],
-  },
+  icon: Code2,
+  name: "Web Development",
+  tag: "21 days · Cohort-based",
+  summary:
+    "Learn to build and deploy modern, responsive websites and full-stack web applications.",
+  outcomes: [
+    "Frontend Developer",
+    "Backend Developer",
+    "Full-Stack Developer",
+  ],
+  salary: "Upto ₹6 L",
+  tools: [
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "React",
+    "Node.js",
+    "MongoDB",
+    "Git & GitHub",
+  ],
+  weeks: [
+    "Web fundamentals, HTML, CSS & responsive design",
+    "JavaScript, ES6+, DOM & interactive web development",
+    "React, components, hooks & modern frontend development",
+    "Node.js, Express & REST API development",
+    "MongoDB, authentication, Git & deployment",
+    "Live full-stack project + portfolio & interview preparation",
+  ],
+},
   {
     icon: Users,
     name: "Marketing & Growth",
@@ -90,16 +104,16 @@ const tracks = [
   },
   {
     icon: Briefcase,
-    name: "Operations & Project Management",
+    name: "E-Commerce",
     tag: "21 days · Cohort-based",
-    summary: "Process design, cross-functional coordination and delivery management for ops roles.",
-    outcomes: ["Operations Executive", "Project Coordinator", "Business Analyst (entry)"],
+    summary: "E-Commerce strategies, sales optimization and customer experience for online businesses.",
+    outcomes: ["E-Commerce Specialist", "Sales Operations Associate", "Customer Experience Manager"],
     salary: "Upto ₹5.2 L",
-    tools: ["Notion", "Jira", "Asana", "Google Workspace"],
+    tools: ["Shopify", "WooCommerce", "Salesforce Commerce", "Google Analytics"],
     weeks: [
-      "Ops fundamentals, process mapping & SOPs",
-      "Project planning: scope, timeline & risk",
-      "Agile & Scrum for non-tech teams",
+      "E-Commerce fundamentals, sales funnels & conversion optimization",
+      "Product management & inventory strategies",
+      "Customer journey mapping & experience design",
       "Data-driven decisions: sheets & dashboards",
       "Vendor management & stakeholder comms",
       "Live ops case study + interview prep",
