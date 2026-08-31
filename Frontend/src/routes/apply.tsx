@@ -1,7 +1,20 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Check, BarChart3, Headphones, Eye, EyeOff } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  BarChart3,
+  Headphones,
+  Eye,
+  EyeOff,
+  Code2,
+  TrendingUp,
+  PieChart,
+  ShoppingCart,
+  Layers,
+} from "lucide-react";
 
 export const Route = createFileRoute("/apply")({
   head: () => ({ meta: [{ title: "Apply — SNehra Solutions" }] }),
@@ -9,6 +22,62 @@ export const Route = createFileRoute("/apply")({
 });
 
 const steps = ["Basics", "Track", "Education", "Experience", "Goals", "Payment", "Done"];
+
+// ─── Must match backend TRACK_PRICES exactly (id + price) ──────────────────
+// The backend is the source of truth for price; this is only for display
+// before the order is created. Keep these in sync with
+// backend/src/controllers/payment.controller.ts -> TRACK_PRICES
+const TRACKS = [
+  {
+    id: "skill-development",
+    title: "Skill Development",
+    desc: "Foundational job-readiness and workplace skills.",
+    price: 2999,
+    icon: Layers,
+  },
+  {
+    id: "sales-excellence",
+    title: "Sales Excellence",
+    desc: "B2B & SaaS sales careers. SDR, BDR, AE.",
+    price: 4949,
+    icon: BarChart3,
+  },
+  {
+    id: "customer-support",
+    title: "Customer Support Mastery",
+    desc: "Modern CX for SaaS, fintech, e-commerce.",
+    price: 4999,
+    icon: Headphones,
+  },
+  {
+    id: "web-development",
+    title: "Web Development",
+    desc: "Full-stack web development track.",
+    price: 14999,
+    icon: Code2,
+  },
+  {
+    id: "marketing-growth",
+    title: "Marketing & Growth",
+    desc: "Performance marketing and growth playbooks.",
+    price: 4999,
+    icon: TrendingUp,
+  },
+  {
+    id: "data-analytics",
+    title: "Data Analytics",
+    desc: "Analytics tooling and BI fundamentals.",
+    price: 14999,
+    icon: PieChart,
+  },
+  {
+    id: "ecommerce",
+    title: "E-Commerce",
+    desc: "E-commerce operations and growth.",
+    price: 4999,
+    icon: ShoppingCart,
+  },
+] as const;
 
 declare global {
   interface Window {
@@ -19,7 +88,7 @@ declare global {
 function Apply() {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
-  const [track, setTrack] = useState<"sales" | "support" | null>(null);
+  const [track, setTrack] = useState<string | null>(null);
   const [exp, setExp] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -44,6 +113,7 @@ function Apply() {
     setFormData((prev) => ({ ...prev, [field]: value }));
 
   const last = steps.length - 1;
+  const selectedTrack = TRACKS.find((t) => t.id === track);
 
   const validateStep = (currentStep: number): boolean => {
     const errors: Record<string, string> = {};
@@ -67,82 +137,88 @@ function Apply() {
     return Object.keys(errors).length === 0;
   };
 
- const handleApplicationSubmit = async () => {
-  setLoading(true);
-  setError("");
-  try {
-    let token = "";
+  const handleApplicationSubmit = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      if (!track) throw new Error("Please select a track before continuing.");
+      let token = "";
 
-    // 1. Signup try karo
-    const signupRes = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({
-        name: formData.fullName,
-        email: formData.email,
-        password: formData.password,
-      }),
-    });
-    const signupData = await signupRes.json();
+      // 1. Signup try karo
+      const signupRes = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          name: formData.fullName,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+      const signupData = await signupRes.json();
 
-    if (!signupRes.ok && signupData.message !== "Email already registered") {
-      throw new Error(signupData.message);
+      if (!signupRes.ok && signupData.message !== "Email already registered") {
+        throw new Error(signupData.message);
+      }
+
+      // 2. Login karke token lo
+      const loginRes = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email: formData.email, password: formData.password }),
+      });
+      const loginData = await loginRes.json();
+      if (!loginRes.ok) throw new Error("Login failed. Check your password.");
+      token = loginData.accessToken;
+
+      // 3. Application create — token header mein bhejo, trackId must match
+      //    a key in the backend's TRACK_PRICES catalogue
+      const appRes = await fetch(`${import.meta.env.VITE_API_URL}/api/applications`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          trackId: track,
+          data: { ...formData, experience: exp },
+        }),
+      });
+      const appData = await appRes.json();
+      if (!appRes.ok) throw new Error(appData.message);
+
+      // Token save karo payment ke liye
+      sessionStorage.setItem("access_token", token);
+      sessionStorage.setItem("verify_email", formData.email);
+      setStep(last - 1);
+    } catch (err: any) {
+      console.error("Error:", err);
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
-
-    // 2. Login karke token lo
-    const loginRes = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ email: formData.email, password: formData.password }),
-    });
-    const loginData = await loginRes.json();
-    if (!loginRes.ok) throw new Error("Login failed. Check your password.");
-    token = loginData.accessToken;
-
-    // 3. Application create — token header mein bhejo
-    const appRes = await fetch(`${import.meta.env.VITE_API_URL}/api/applications`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        trackId: track ?? "sales",
-        data: { ...formData, experience: exp },
-      }),
-    });
-    const appData = await appRes.json();
-    if (!appRes.ok) throw new Error(appData.message);
-
-    // Token save karo payment ke liye
-    sessionStorage.setItem("access_token", token);
-
-    sessionStorage.setItem("verify_email", formData.email);
-    setStep(last - 1);
-  } catch (err: any) {
-    console.error("Error:", err);
-    setError(err.message || "Something went wrong");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const handlePayment = async () => {
     setLoading(true);
     setError("");
     try {
-     const paymentToken = sessionStorage.getItem("access_token") || "";
-const orderRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/create-order`, {
-  method: "POST",
-  headers: { 
-    "Content-Type": "application/json",
-    "Authorization": `Bearer ${paymentToken}`,
-  },
-  credentials: "include",
-        body: JSON.stringify({ amount: 4999, description: "S.Nehra — Application Fee" }),
+      if (!track) throw new Error("No track selected.");
+      const paymentToken = sessionStorage.getItem("access_token") || "";
+
+      // Only trackId is sent — the backend looks up the authoritative price
+      // from TRACK_PRICES itself, so the amount can never be tampered with
+      // client-side.
+      const orderRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/create-order`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${paymentToken}`,
+        },
+        credentials: "include",
+        body: JSON.stringify({ trackId: track }),
       });
       const order = await orderRes.json();
       console.log("Order:", orderRes.status, order);
@@ -150,18 +226,18 @@ const orderRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/creat
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-        amount: order.amount, // in rupees
+        amount: order.amount, // in paise, returned by backend
         currency: order.currency,
         name: "SNehra Solutions",
-        description: "Application Fee",
-        order_id: order.id,
+        description: order.trackName ? `Enrollment: ${order.trackName}` : "Application Fee",
+        order_id: order.orderId,
         handler: async (response: any) => {
           const verifyRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/verify`, {
             method: "POST",
             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${paymentToken}` },
             credentials: "include",
             body: JSON.stringify({
-              razorpay_order_id: response.razorpay_order_id || order.id,
+              razorpay_order_id: response.razorpay_order_id || order.orderId,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
             }),
@@ -329,20 +405,17 @@ const orderRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/creat
                 subtitle="You can change this later with your advisor."
               >
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <TrackCard
-                    active={track === "sales"}
-                    onClick={() => setTrack("sales")}
-                    icon={BarChart3}
-                    title="Sales Excellence"
-                    desc="B2B & SaaS sales careers. SDR, BDR, AE."
-                  />
-                  <TrackCard
-                    active={track === "support"}
-                    onClick={() => setTrack("support")}
-                    icon={Headphones}
-                    title="Customer Support"
-                    desc="Modern CX for SaaS, fintech, e-commerce."
-                  />
+                  {TRACKS.map((t) => (
+                    <TrackCard
+                      key={t.id}
+                      active={track === t.id}
+                      onClick={() => setTrack(t.id)}
+                      icon={t.icon}
+                      title={t.title}
+                      desc={t.desc}
+                      price={t.price}
+                    />
+                  ))}
                 </div>
                 {formErrors.track && (
                   <p className="mt-4 text-sm text-destructive">{formErrors.track}</p>
@@ -449,12 +522,16 @@ const orderRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/creat
                 <div className="rounded-[24px] border border-border bg-surface p-8">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-display text-2xl text-ink">Application Fee</div>
+                      <div className="font-display text-2xl text-ink">
+                        {selectedTrack?.title ?? "Application Fee"}
+                      </div>
                       <div className="mt-1 text-sm text-muted-foreground">
-                        No hidden charges. 
+                        No hidden charges.
                       </div>
                     </div>
-                    <div className="font-display text-4xl text-ink">₹4,999</div>
+                    <div className="font-display text-4xl text-ink">
+                      ₹{(selectedTrack?.price ?? 0).toLocaleString("en-IN")}
+                    </div>
                   </div>
                   <div className="mt-6 space-y-2">
                     {[
@@ -475,7 +552,9 @@ const orderRes = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/creat
                     disabled={loading}
                     className="mt-8 w-full rounded-[14px] bg-ink px-6 py-4 text-sm font-medium text-primary-foreground transition-all hover:bg-ink/90 hover:shadow-gold disabled:opacity-50"
                   >
-                    {loading ? "Processing..." : "Pay ₹4,999 — Secure My Seat"}
+                    {loading
+                      ? "Processing..."
+                      : `Pay ₹${(selectedTrack?.price ?? 0).toLocaleString("en-IN")} — Secure My Seat`}
                   </button>
                   <p className="mt-3 text-center text-xs text-muted-foreground">
                     Powered by Razorpay · 256-bit SSL
@@ -590,12 +669,14 @@ function TrackCard({
   icon: Icon,
   title,
   desc,
+  price,
 }: {
   active: boolean;
   onClick: () => void;
   icon: React.ComponentType<{ className?: string }>;
   title: string;
   desc: string;
+  price: number;
 }) {
   return (
     <button
@@ -612,6 +693,11 @@ function TrackCard({
         className={`mt-2 text-sm ${active ? "text-primary-foreground/70" : "text-muted-foreground"}`}
       >
         {desc}
+      </div>
+      <div
+        className={`mt-4 font-display text-lg ${active ? "text-gold" : "text-ink"}`}
+      >
+        ₹{price.toLocaleString("en-IN")}
       </div>
     </button>
   );
