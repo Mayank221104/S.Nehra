@@ -89,7 +89,7 @@ model Profile {
   bio             String?  @db.Text
   location        String?
   currentRole     String?
-  avatarUrl       String? 
+  avatarUrl       String?
   experienceYears Int?
 
   skills          String[] @default([])
@@ -137,8 +137,7 @@ model Application {
   status      ApplicationStatus @default(DRAFT)
 
   currentStep Int               @default(1)
-
-  // Multi-step onboarding state
+ // Multi-step onboarding state
   data        Json?
 
   createdAt   DateTime          @default(now())
@@ -155,10 +154,14 @@ model Payment {
   orderId       String        @unique
   transactionId String?       @unique
 
-  amount        Int
+  amount        Int           // Always in paise, always set by backend
   currency      String        @default("INR")
 
   status        PaymentStatus @default(PENDING)
+
+  // ← ADDED: which course this payment is for
+  trackId       String        @default("unknown")
+  trackName     String        @default("Unknown Course")
 
   description   String?
   receipt       String?
@@ -177,8 +180,7 @@ model Notification {
 
   read      Boolean  @default(false)
 
-  // PAYMENT, ONBOARDING, SYSTEM
-  type      String
+  type      String   // PAYMENT, ONBOARDING, SYSTEM
 
   createdAt DateTime @default(now())
 }
